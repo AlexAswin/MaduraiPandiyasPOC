@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+.navbar {
+    background-color: black;
+    .container-fluid {       
+        .navbar-brand {
+            color: #ffb407b5;
+        }
+        img {
+            width: 150px;
+            height: 150px;
+        }
+        button {
+            background-color: #ffb407b5;
+        }
+        .collapse {
+            flex-grow: 0;
+            color: #ffb407b5;
+            .navbar-nav {
+                .nav-item {
+                    .nav-link {
+                        color: #ffb407b5;
+                    }
+                }
+            }
+        }      
+    }
+}
+
+img {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+h1 {
+    font-family: 'Montserrat';
+    padding: 20px 0px;
+}
+
+.accordion {
+    .accordion-item {
+        .accordion-header {
+            .accordion-button {
+                font-family: 'Montserrat';
+            }
+        }
+
+        .accordion-collapse {
+            .accordion-body {
+                .menu-items {
+                    font-family: 'Montserrat';
+
+                    table {
+
+                        thead,
+                        tbody {
+                            border-style: none !important;
+
+                            tr,
+                            td {
+                                border-style: none !important;
+
+                                th {
+                                    border-style: none !important;
+                                    font-size: large;
+                                    font-weight: bolder;
+                                    font-family: 'Montserat';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
