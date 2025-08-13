@@ -38,35 +38,39 @@ h1 {
     font-family: 'Montserrat';
     padding: 20px 0px;
 }
-
-.accordion {
-    .accordion-item {
-        .accordion-header {
-            .accordion-button {
-                font-family: 'Montserrat';
-            }
-        }
-
-        .accordion-collapse {
-            .accordion-body {
-                .menu-items {
+.container-fluid {
+    width: 70%;
+    .accordion {
+        .accordion-item {
+            .accordion-header {
+                .accordion-button {
                     font-family: 'Montserrat';
-
-                    table {
-
-                        thead,
-                        tbody {
-                            border-style: none !important;
-
-                            tr,
-                            td {
+                }
+            }
+    
+            .accordion-collapse {
+                .accordion-body {
+                    padding: 10px 0px;
+                    .menu-items {
+                        font-family: 'Montserrat';
+    
+                        table {
+    
+                            thead,
+                            tbody {
                                 border-style: none !important;
-
-                                th {
+    
+                                tr,
+                                td {
                                     border-style: none !important;
-                                    font-size: large;
-                                    font-weight: bolder;
-                                    font-family: 'Montserat';
+                                    text-align: center;
+    
+                                    th {
+                                        border-style: none !important;
+                                        font-size: large;
+                                        font-weight: bolder;
+                                        font-family: 'Montserat';
+                                    }
                                 }
                             }
                         }
@@ -74,5 +78,12 @@ h1 {
                 }
             }
         }
+    }
+
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+         width: 95%;
     }
 }
