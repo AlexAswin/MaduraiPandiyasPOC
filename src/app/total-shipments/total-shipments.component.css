@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+.container {
+  min-height: 500px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    padding: 20px 0px;
+
+    .dispatch-group {
+        display: flex;
+        min-width: 35%;
+        justify-content: space-between;
+
+        .form-group {
+            .form-control {
+                border-radius: 0px;
+            }
+        }
+    }
+}
+
+}
+
+
+.date-range-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 30px 0px;
+
+    .col-md-3 {
+        display: flex;
+    }
+}
+
+button {
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+}
+.shipmentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 10px;
+    padding: 35px 0px;
+
+    .card {
+      width: 49%;
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: none;
+
+        button {
+          border: none;
+        }
+      
+        table {
+          width: 100%; 
+          thead {
+            tr {
+              th {
+                text-align: center;      
+                vertical-align: middle; 
+              }
+            }
+          }
+          tbody {
+            tr {
+              td {
+                text-align: center;      
+                vertical-align: middle;  
+              }
+            }
+          }
+          }
+        }
+        .totalCost {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 60px;
+        }
+      }
+}
+
+
+ .offcanvas {
+    .offcanvas-header {
+       .offcanvas-title {
+
+       }
+    }
+    .offcanvas-body {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .input-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 25%;
+
+        label {
+          width: 35%;
+        }
+        input {
+          height: 50px;
+        }
+        select {
+          min-height: 50px;
+        }
+      }
+
+      button {
+        border-radius: 0px;
+        color: white;
+        background-color: black;
+      }
+
+      button:disabled {
+        background-color: #f7f7f7;
+        color: black;
+        border: 1px solid black;
+        cursor: not-allowed;
+      }
+      
+    }
+ }
+
+.downloadBtn {
+  padding: 25px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+ }
+ 
+ /* #shipmentContainer {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+} */
+  

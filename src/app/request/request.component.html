@@ -1,0 +1,34 @@
+<app-nav-bar></app-nav-bar>
+
+<button class="back-button" [routerLink]="['/shipment']"><i class="bi bi-chevron-compact-left"></i></button>
+
+<div class="container mt-3">
+  <h3>Shipments Sent</h3>
+
+  <div *ngIf="DispatchedItemsList.length > 0; else noData">
+    <div
+      class="card mb-3 p-3 shadow-sm"
+      *ngFor="let DispatchedItem of DispatchedItemsList; let i = index"
+    >
+      <h5>Shipment {{ i + 1 }}</h5>
+      <p><strong>From:</strong> {{ DispatchedItem.shipmentFrom }}</p>
+      <p><strong>To:</strong> {{ DispatchedItem.shipmentTo }}</p>
+      <p><strong>Dispatched Time:</strong> {{ DispatchedItem.DispatchedTime }}</p>
+
+      <div *ngIf="DispatchedItem.shipmentItemsDetails && DispatchedItem.shipmentItemsDetails.length > 0">
+        <h6>Items:</h6>
+        <ul>
+          <li *ngFor="let item of DispatchedItem.shipmentItemsDetails">
+            {{ item.itemName }} - {{ item.quantity }}{{item.unit}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p class="text-muted">No shipment requests found.</p>
+  </ng-template>
+</div>
+
+  
