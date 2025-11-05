@@ -1,0 +1,32 @@
+.parent-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    height: calc(100vh - 150px);
+    overflow: auto;
+    background: #d2d2d2;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* slightly darker for visibility */
+  }
+  
+  .parent-container img {
+    min-height: 500px;
+    image-rendering: auto;       
+    image-rendering: crisp-edges; 
+    image-rendering: high-quality;
+  }
+  
+  .parent-container .logIn-container {
+    min-width: 500px;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 30px;
+    background: white;
+    border-radius: 12px;
+  }
+  

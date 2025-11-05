@@ -1,0 +1,150 @@
+<div class="container mt-3">
+  <div class="header">
+    <h3>Shipments Sent</h3>
+    <div class="dispatch-group">
+      <h3>Dispatched From</h3>
+      <div class="form-group mb-3">
+        <select id="from" class="form-control" formControlName="from" [formControl]="fromStoreControl"
+          (change)="onStoreChange($event)">
+          <option *ngFor="let loc of locations" [value]="loc">
+            {{ loc }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="date-range-container">
+    <div class="col-md-3">
+      <label for="startDate" class="form-label fw-semibold">Start Date</label>
+      <input type="date" id="startDate" class="form-control" [formControl]="startDateControl">
+    </div>
+
+    <div class="col-md-3">
+      <label for="endDate" class="form-label fw-semibold">End Date</label>
+      <input type="date" id="endDate" class="form-control" [formControl]="endDateControl">
+    </div>
+
+    <button btn btn-primary (click)="applyFilters()">Apply Filter</button>
+
+    <div [formGroup]="addItemsForm" (ngSubmit)="onSubmit()">
+      <button btn btn-primary type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop"><i class="bi bi-text-indent-left"></i></button>
+  
+      <div class="container offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+
+
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasTopLabel">Add Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="input-container">
+            <label for="itemName">Item Name :</label>
+            <input type="text" class="form-control me-2" placeholder="Enter Item Name ..." formControlName="itemName">
+          </div>
+          <div class="input-container">
+            <label for="unitPrice"> Unit Price :</label>
+            <input type="text" class="form-control me-2" 
+              placeholder="Add Unit Price" 
+              formControlName="unitPrice"
+              [disabled]="!addItemsForm.get('itemName')?.value">
+          </div>
+          <button btn btn-primary (click)="onSubmit()" [disabled]="!addItemsForm.get('itemName')?.value || !addItemsForm.get('unitPrice')?.value">Add Item</button>
+        </div>
+
+
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasTopLabel">Update Price</h5>
+        </div>
+
+        <div class="offcanvas-body">
+          <div class="input-container">
+            <label for="itemName">Item Name :</label>
+            <select id="selectItem" class="form-control" style="min-width: 100px;" placeholder="SelectItem"
+                    formControlName="updateItem">
+                <option value="" disabled selected>Select Item</option>
+
+                <option *ngFor="let item of allItems" [value]="item"> {{ item }} </option>
+            </select>
+          </div>
+          <div class="input-container">
+            <label for="updateUnitPrice"> Unit Price :</label>
+            <input type="text" class="form-control me-2" 
+              placeholder="Add Unit Price" 
+              formControlName="UpdatedUnitPrice">
+          </div>
+          <button btn btn-primary (click)="updatePrice()" [disabled]="!addItemsForm.get('updateItem')?.value || !addItemsForm.get('UpdatedUnitPrice')?.value">Update Item</button>
+        </div>
+
+
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasTopLabel"> Delete Product </h5>
+        </div>
+
+        <div class="offcanvas-body">
+          <div class="input-container">
+            <label for="DeleteItem">Delete Item :</label>
+            <select id="deleteItem" class="form-control" style="min-width: 100px;" placeholder="DeleteItem"
+                    formControlName="deleteItem">
+                <option value="" disabled selected>Delete Item</option>
+
+                <option *ngFor="let item of allItems" [value]="item"> {{ item }} </option>
+            </select>
+          </div>
+          
+          <button btn btn-primary (click)="deleteItem()" [disabled]="!addItemsForm.get('deleteItem')?.value">Delete Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shipmentContainer" id="shipmentContainer" *ngIf="totalDispatchedItems!.length > 0; else noData">
+    <div class="card mb-3 p-3 shadow-sm" *ngFor="let DispatchedItems of totalDispatchedItems; let i = index">
+      <div class="card-header">
+        <h5>Shipment {{ i + 1 }}</h5>
+        <button (click)="deleteShipment(DispatchedItems)"><i class="bi bi-x-square-fill"></i></button>
+      </div>
+      <div class="card-body">
+        <p><strong>From :</strong> {{ DispatchedItems.shipmentFrom }}</p>
+        <p><strong>To :</strong> {{ DispatchedItems.shipmentTo }}</p>
+        <p><strong>Dispatched Time :</strong> {{ DispatchedItems.DispatchedTime }}</p>
+  
+        <div *ngIf="DispatchedItems.shipmentItemsDetails && DispatchedItems.shipmentItemsDetails.length > 0">
+          <table class="table table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let DispatchedItem of DispatchedItems.shipmentItemsDetails">
+                <td>{{ DispatchedItem.itemName }}</td>
+                <td>{{ DispatchedItem.quantity }}{{ DispatchedItem.unit }}</td>
+                <td>{{ DispatchedItem.unitPrice }} {{'CAD'}}</td>
+                <td>{{ DispatchedItem.totalPrice }} {{'CAD'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+        <div class="card-footer totalCost">
+          <p class="mt-3"><strong>Total Cost :</strong> {{ DispatchedItems.shipmentGrandTotal }} {{'CAD'}}</p>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <ng-template #noData>
+    <p class="text-muted">No shipment requests found.</p>
+  </ng-template>
+</div>
+
+<!-- <app-download-pdf></app-download-pdf>-->
+<div class="downloadBtn" *ngIf="MaduraiPandiyas || MaduraiPandiyasElite">
+  <button (click)="downloadPDF()">Download Details</button>
+</div>

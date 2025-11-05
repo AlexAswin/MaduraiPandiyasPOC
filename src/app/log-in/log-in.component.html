@@ -1,0 +1,31 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="parent-container">
+  <div>
+    <img src="assets/Logo/MaduraiPandiyas.jpeg" alt="">
+  </div>
+  <div class="logIn-container">
+    <h3 class="mb-4 text-center">Login</h3>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="userId" class="form-label">User ID</label>
+        <input type="text" id="userId" class="form-control" formControlName="userId" placeholder="Enter your User ID" />
+        <div *ngIf="loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched" class="text-danger">
+          User ID is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" formControlName="password"
+          placeholder="Enter your Password" />
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+          Password is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Sign In</button>
+    </form>
+  </div>
+</div>

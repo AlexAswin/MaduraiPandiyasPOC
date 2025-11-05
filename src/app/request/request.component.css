@@ -1,0 +1,75 @@
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    font-family: 'Montserrat', sans-serif;
+  
+    h3 {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 2rem;
+    }
+  
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+  
+      h5 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #222;
+      }
+  
+      p {
+        margin: 4px 0;
+        font-size: 0.95rem;
+        color: #555;
+  
+        strong {
+          color: #333;
+        }
+      }
+  
+      ul {
+        list-style-type: disc;
+        padding-left: 20px;
+        margin: 8px 0 0 0;
+  
+        li {
+          font-size: 0.9rem;
+          color: #555;
+          padding: 2px 0;
+        }
+    }
+}
+}  
+
+.back-button {
+    position: fixed;       /* stay fixed on screen */
+    top: 50%;              /* center vertically */
+    left: 20px;            /* distance from left edge */
+    transform: translateY(-50%); /* perfectly center */
+    background: none;      /* no background */
+    border: none;          /* no border */
+    font-size: 2rem;       /* adjust icon size */
+    color: #007bff;        /* icon color */
+    cursor: pointer;
+    z-index: 1000;
+    padding: 8px;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: #0056b3;
+}

@@ -1,0 +1,26 @@
+.navbar {
+    background-color: black;
+    .container-fluid {       
+        .navbar-brand {
+            color: #ffb407b5;
+        }
+        img {
+            width: 150px;
+            height: 150px;
+        }
+        button {
+            background-color: #ffb407b5;
+        }
+        .collapse {
+            flex-grow: 0;
+            color: #ffb407b5;
+            .navbar-nav {
+                .nav-item {
+                    .nav-link {
+                        color: #ffb407b5;
+                    }
+                }
+            }
+        }      
+    }
+}

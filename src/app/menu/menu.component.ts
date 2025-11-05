@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import * as Papa from 'papaparse';
 import { CommonModule } from '@angular/common';
+import { LogInComponent } from '../log-in/log-in.component';
+import { NavBarComponent } from '../nav-bar/nav-bar.component';
 
 interface MenuItem {
   
@@ -17,13 +19,14 @@ interface MenuItem {
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [HttpClientModule, NgFor, CommonModule ],
+  imports: [HttpClientModule, NgFor, CommonModule, NavBarComponent, LogInComponent ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
 export class MenuComponent  implements OnInit {
 
   menuItems: any = [];
+  todayDate: any = 0;
   groupedMenuItem: { [category: string]: MenuItem[] } = {};
   originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
     return 0;  // No sorting, preserve original order
@@ -36,6 +39,7 @@ export class MenuComponent  implements OnInit {
   
   ngOnInit(): void {
   this.getMenuItems();
+  this.todayDate = new Date().toLocaleDateString();
   }
 
   getMenuItems() {
