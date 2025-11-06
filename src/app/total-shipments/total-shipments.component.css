@@ -9,6 +9,26 @@
     flex-wrap: nowrap;
     padding: 20px 0px;
 
+    .logOutBtn {
+      width: 50px;            /* Equal width and height */
+      height: 50px;
+      border-radius: 50%;     /* Makes it circular */
+      display: flex;          
+      align-items: center;    /* Centers the icon vertically */
+      justify-content: center; /* Centers the icon horizontally */
+      /* background-color: black;
+      color: white; */
+      border: none;
+      cursor: pointer;
+      font-size: 24px;        /* Adjust icon size */
+      transition: transform 0.2s, background-color 0.3s;
+    }
+    
+    .logOutBtn:hover {
+      background-color: #e7e7e7;
+      transform: scale(1.1);
+    }
+
     .dispatch-group {
         display: flex;
         min-width: 35%;
@@ -116,13 +136,18 @@ button {
         }
         select {
           min-height: 50px;
+
+          .selectOptions {
+              /* width: 30%; */
+          }
         }
       }
 
       button {
         border-radius: 0px;
         color: white;
-        background-color: black;
+        background-color: black; 
+        width: 200px;
       }
 
       button:disabled {

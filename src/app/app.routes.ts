@@ -11,7 +11,7 @@ export const routes: Routes = [
     { path: '', component: LogInComponent  },
     { path: 'shipment', canActivate: [authGuard], loadComponent: () => import('./shipments/shipments.component').then(m => m.ShipmentsComponent) },
     { path: 'dispatch-details', canActivate: [authGuard], loadComponent: () => import('./request/request.component').then(m => m.RequestComponent) },
-    { path: 'total-shipments', component: TotalShipmentsComponent },
+    { path: 'total-shipments', canActivate: [authGuard], loadComponent: () => import('./total-shipments/total-shipments.component').then(m => m.TotalShipmentsComponent) },
     { path: 'menu', component: MenuComponent },
 
 
