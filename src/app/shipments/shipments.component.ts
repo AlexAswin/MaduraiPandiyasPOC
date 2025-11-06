@@ -51,7 +51,7 @@ export class ShipmentsComponent {
       from: ['', Validators.required],
       to: ['', Validators.required],
       message: [''],
-      quantity: [''],
+      quantity: [[''], [Validators.min(1)]],
       unit: [''],
       items: this.fb.array([], Validators.required),
     });
@@ -167,6 +167,11 @@ export class ShipmentsComponent {
       console.error('Error submitting shipment:', err);
       alert('Error submitting shipment. Check console for details.');
     }
+  }
+
+  logOutUser = () => {
+    localStorage.removeItem('UserId');
+    this.router.navigate(['/']);
   }
 
   

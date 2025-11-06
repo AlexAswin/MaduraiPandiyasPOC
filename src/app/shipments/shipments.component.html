@@ -1,7 +1,7 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="parent-container">
-  <div class="container mt-4" [formGroup]="shipmentDetails">
+  <div class="container" [formGroup]="shipmentDetails">
     <h3>Materials Dispatch Form</h3>
     <div class="location-select-group">
       <div class="form-group mb-3">
@@ -24,7 +24,7 @@
     </div>
 
 
-    <div class="form-group mb-3 d-flex">
+    <div class="form-group d-flex">
       <div class="form-group">
         <select id="selectItem" class="form-control" style="min-width: 100px;" placeholder="SelectItem"
           formControlName="message">
@@ -37,7 +37,7 @@
       </div>
 
 
-      <input type="text" class="form-control me-2" placeholder="Enter quantity" formControlName="quantity">
+      <input type="text" class="form-control" placeholder="Enter quantity" formControlName="quantity" min="1">
 
       <div class="form-group d-flex">
         <select id="unit" class="form-control" style="min-width: 100px;" placeholder="Units" formControlName="unit">
@@ -69,6 +69,9 @@
 
       <button class="dispatch-Details" [routerLink]="['/dispatch-details']">Dispatch Details</button>
     </div>
+    <!-- <div>
+      <button [routerLink]="['/menu']">Menu</button>
+    </div> -->
 
   </div>
 </div>
@@ -76,3 +79,13 @@
 <div class="snackbar" [class.show]="showSnackbar">
   Materials Dispatched!
 </div>
+
+<div class="logoutBtnContainer">
+  <button class="logOutBtn" (click)="logOutUser()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+    </svg>
+    <span>LogOut</span>
+  </button>
+</div>
+

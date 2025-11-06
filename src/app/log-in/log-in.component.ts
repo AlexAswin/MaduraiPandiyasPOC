@@ -32,7 +32,6 @@ export class LogInComponent implements OnInit {
     const { userId, password } = this.loginForm.value;
 
     if (userId === 'Madurai Pandiyas' && password === '123456') {
-      console.log('Login successful!');
       localStorage.setItem('UserId', userId);
       this.router.navigate(['/shipment']);
     } else if (userId === 'Madurai Pandiyas Elite' && password === '123456') {
@@ -42,7 +41,6 @@ export class LogInComponent implements OnInit {
       localStorage.setItem('UserId', userId);
       this.router.navigate(['/total-shipments']);
     } else {
-      console.log('Invalid credentials');
       alert('Invalid User ID or Password');
     }
   }

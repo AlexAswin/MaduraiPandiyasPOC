@@ -25,6 +25,7 @@ export class TotalShipmentsComponent implements OnInit {
 
   MaduraiPandiyas: boolean = false;
   MaduraiPandiyasElite: boolean = false;
+  confirmDeleteItem: boolean = false
 
   locations = ['Total Shipments', 'Madurai Pandiyas', 'Madurai Pandiyas Elite'];
   fromStoreControl = new FormControl('Total Shipments');
@@ -47,7 +48,8 @@ export class TotalShipmentsComponent implements OnInit {
       unitPrice: [''],
       updateItem: [''],
       UpdatedUnitPrice: [''],
-      deleteItem: ['']
+      deleteItem: [''],
+      confirmDeleteItem: ['']
       // items: this.fb.array([], Validators.required),
     });
   }
@@ -208,8 +210,15 @@ updatePrice = () => {
 
 deleteItem = () => {
   const deleteItem = this.addItemsForm.get('deleteItem')?.value?.trim();
-  this.shipmentService.deleteItem(deleteItem);
-  this.addItemsForm.get('deleteItem')?.setValue('');
+  const confirmDeleteItem = this.addItemsForm.get('confirmDeleteItem')?.value?.trim();
+
+  if(deleteItem === confirmDeleteItem) {
+    this.confirmDeleteItem = true;
+    this.shipmentService.deleteItem(deleteItem);
+    this.addItemsForm.get('deleteItem')?.setValue('');
+    this.addItemsForm.get('confirmDeleteItem')?.setValue('');
+  }
+
 }
 
 // downloadPDF() {
