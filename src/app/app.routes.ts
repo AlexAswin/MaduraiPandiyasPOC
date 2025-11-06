@@ -4,13 +4,15 @@ import { ShipmentsComponent } from './shipments/shipments.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { RequestComponent } from './request/request.component';
 import { TotalShipmentsComponent } from './total-shipments/total-shipments.component';
+import { authGuard } from './auth.guard';
 
 
 export const routes: Routes = [
-    { path: '', component: LogInComponent },
-    { path: 'login', component: LogInComponent },
-    { path: 'shipment', component: ShipmentsComponent },
-    { path: 'dispatch-details', component: RequestComponent },
-    { path: 'total-shipments', component: TotalShipmentsComponent }
+    { path: '', component: LogInComponent  },
+    { path: 'shipment', canActivate: [authGuard], loadComponent: () => import('./shipments/shipments.component').then(m => m.ShipmentsComponent) },
+    { path: 'dispatch-details', canActivate: [authGuard], loadComponent: () => import('./request/request.component').then(m => m.RequestComponent) },
+    { path: 'total-shipments', component: TotalShipmentsComponent },
+    { path: 'menu', component: MenuComponent },
+
 
 ];

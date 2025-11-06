@@ -84,15 +84,24 @@
         <div class="offcanvas-body">
           <div class="input-container">
             <label for="DeleteItem">Delete Item :</label>
-            <select id="deleteItem" class="form-control" style="min-width: 100px;" placeholder="DeleteItem"
+            <select id="deleteItem" class="form-control" style="min-width: 100px;" placeholder="Select Delete Item"
                     formControlName="deleteItem">
-                <option value="" disabled selected>Delete Item</option>
+                <option value="" disabled >Delete Item</option>
+
+                <option *ngFor="let item of allItems" [value]="item"> {{ item }} </option>
+            </select>
+          </div>
+          <div class="input-container">
+            <label for="ConfirmDeleteItem">Confirm Item :</label>
+            <select id="confirmDeleteItem" class="form-control" style="min-width: 100px;" placeholder="Confirm Delete Item"
+                    formControlName="confirmDeleteItem">
+                <option value="" disabled >Confirm Item</option>
 
                 <option *ngFor="let item of allItems" [value]="item"> {{ item }} </option>
             </select>
           </div>
           
-          <button btn btn-primary (click)="deleteItem()" [disabled]="!addItemsForm.get('deleteItem')?.value">Delete Item</button>
+          <button btn btn-primary (click)="deleteItem()"  [disabled]="!addItemsForm.get('deleteItem')?.value || addItemsForm.get('deleteItem')?.value !== addItemsForm.get('confirmDeleteItem')?.value">Delete Item</button>
         </div>
       </div>
     </div>

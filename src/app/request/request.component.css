@@ -56,14 +56,14 @@
 }  
 
 .back-button {
-    position: fixed;       /* stay fixed on screen */
-    top: 50%;              /* center vertically */
-    left: 20px;            /* distance from left edge */
-    transform: translateY(-50%); /* perfectly center */
-    background: none;      /* no background */
-    border: none;          /* no border */
-    font-size: 2rem;       /* adjust icon size */
-    color: #007bff;        /* icon color */
+    position: fixed;     
+    top: 50%;         
+    left: 20px;
+    transform: translateY(-50%);
+    background: none;     
+    border: none;         
+    font-size: 2rem;  
+    color: #007bff;     
     cursor: pointer;
     z-index: 1000;
     padding: 8px;
@@ -72,4 +72,11 @@
 
 .back-button:hover {
     color: #0056b3;
+}
+
+@media (max-width: 576px) {
+  .back-button {
+    display: none;
+  }
+
 }
