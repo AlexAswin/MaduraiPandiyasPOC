@@ -1,5 +1,6 @@
 <div class="container mt-3">
   <div class="header">
+    <div><button class="logOutBtn" (click)="logout()" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Log Out"><i class="bi bi-arrow-left-circle"></i></button></div>
     <h3>Shipments Sent</h3>
     <div class="dispatch-group">
       <h3>Dispatched From</h3>
@@ -32,10 +33,9 @@
   
       <div class="container offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
 
-
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="offcanvasTopLabel">Add Product</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" (click)="closeForm()"></button>
         </div>
         <div class="offcanvas-body">
           <div class="input-container">
@@ -62,7 +62,7 @@
             <label for="itemName">Item Name :</label>
             <select id="selectItem" class="form-control" style="min-width: 100px;" placeholder="SelectItem"
                     formControlName="updateItem">
-                <option value="" disabled selected>Select Item</option>
+                <option class="selectOptions" value="" disabled selected>Select Item</option>
 
                 <option *ngFor="let item of allItems" [value]="item"> {{ item }} </option>
             </select>
