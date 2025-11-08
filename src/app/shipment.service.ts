@@ -74,6 +74,18 @@ export class ShipmentService {
       console.error('Error deleting item:', error);
     }
   }
+
+  async submitItemRequest(reqItemDetails: any, requestFrom: string) {
+    try {
+
+      const orderCollection = collection(this.firestore, requestFrom);
+      const docRef = await addDoc(orderCollection, reqItemDetails);
+      return docRef.id;
+    } catch (error) {
+      console.error("Error adding shipment:", error);
+      throw error;
+    }
+  }  
   
 
 }
