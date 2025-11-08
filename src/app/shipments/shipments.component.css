@@ -3,6 +3,146 @@
 body {
     background: #d2d2d2;
 }
+
+.menuBtn {
+  position: absolute;
+  top: 250px;
+  right: 100px;
+  border: 1px solid;
+  
+}
+
+.offcanvas {
+  .offcanvas-header {
+    .offcanvas-title {
+      font-family: 'Montserrat', sans-serif;
+  }
+  }
+  .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .reqItemBtn {
+      width: 100%;
+      min-height: 50px;
+      background: white;
+      border-radius: 5px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .logOutBtn {
+    width: 100%;
+    min-height: 50px;
+    background: black;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+  }
+  
+  
+  .logOutBtn > svg {
+    width: 34px;
+    margin-right: 5px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .logOutBtn:hover svg {
+    transform: translateX(-10px);
+  }
+  
+  .logOutBtn:active {
+    transform: scale(0.95);
+  }
+  }
+}
+
+.modal {
+  .modal-dialog {
+    min-width: 50%;
+    .modal-content {
+      .modal-header {
+
+      }
+      .modal-body {
+        min-height: 20vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        input {
+          border: none;
+          border-bottom: 1px solid;
+          width: 70%;
+          min-height: 50px;
+          padding: 0px 15px;
+        }
+        button {
+          min-width: 20%;
+          min-height: 50px;
+          background: white;
+          color: black;
+          border: 2px solid black;
+          transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        button:disabled,
+        button[disabled] {
+          background-color: #e9ecef; 
+          color: #6c757d;          
+          border-color: #dee2e6;    
+          cursor: not-allowed;       
+          opacity: 1;                
+          pointer-events: none;     
+        }
+        
+      }
+
+      .reqList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        label {
+           font-family: 'Montserrat', sans-serif;
+        }
+
+        .list-group {
+          width: 70%;
+          padding: 25px 0px;
+
+          li {
+            border-radius: 10px;
+          }
+        }
+      }
+      .modal-footer {
+        border-top: none;
+        justify-content: space-between;
+
+        button {
+          width: 25%;
+          height: 50px;
+          background: black;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+        
+        button:disabled,
+        button[disabled] {
+          background-color: #e9ecef; 
+          color: #6c757d;          
+          border-color: #dee2e6;    
+          cursor: not-allowed;       
+          opacity: 1;                
+          pointer-events: none;     
+        }
+        
+      }
+    }
+  }
+}
 .parent-container {
     .container {
         max-width: 800px;
@@ -49,7 +189,7 @@ body {
           }
   
           .form-control {
-            width: 100%;
+            /* width: 100%; */
             border-radius: 8px;
             border: 1px solid #ccc;
             padding: 8px 12px;
@@ -143,47 +283,7 @@ body {
     opacity: 1;
   }
 
-  .logoutBtnContainer {
-    width: 100%;
-  }
-
-  .logOutBtn {
-  cursor: pointer;
-  font-weight: 700;
-  transition: all 0.2s;
-  padding: 10px 20px;
-  border-radius: 100px;
-  background: black;
-  border: 1px solid transparent;
-  display: flex;
-  align-items: center;
-  font-size: 15px;
-  color: white;
-  margin-right: 100px;
-  bottom: 0;
-  position: absolute;
-  right: 0;
-  margin-bottom: 100px;
-}
-
-.logOutBtn:hover {
-  background: black;
-}
-
-.logOutBtn > svg {
-  width: 34px;
-  margin-right: 5px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.logOutBtn:hover svg {
-  transform: translateX(-10px);
-}
-
-.logOutBtn:active {
-  transform: scale(0.95);
-}
-
+  
 
   @media (max-width: 576px) {
     .parent-container {

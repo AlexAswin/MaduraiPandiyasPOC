@@ -29,6 +29,10 @@ export class TotalShipmentsComponent implements OnInit {
   MaduraiPandiyasElite: boolean = false;
   confirmDeleteItem: boolean = false
 
+  AddProductDetails: boolean = false;
+  updatePriceEle: boolean = false;
+  deleteProductEle: boolean = false;
+
   locations = ['Total Shipments', 'Madurai Pandiyas', 'Madurai Pandiyas Elite'];
   fromStoreControl = new FormControl('Total Shipments');
   startDateControl = new FormControl('');
@@ -185,6 +189,13 @@ deleteShipment = (dispatchedItems: any) => {
   console.log(this.totalDispatchedItems);
 }
 
+showAddProductDetails() {
+  this.updatePriceEle = false;
+  this.deleteProductEle = false
+  this.AddProductDetails = !this.AddProductDetails;
+  
+}
+
 addProduct = () => {
   if (this.addItemsForm.invalid) return;
 
@@ -200,6 +211,12 @@ addProduct = () => {
 
 }
 
+showUpdatePriceEle() {
+  this.AddProductDetails = false;
+  this.deleteProductEle = false
+  this.updatePriceEle = !this.updatePriceEle;
+}
+
 updatePrice = () => {
   const updateItem = this.addItemsForm.get('updateItem')?.value?.trim();
   const updatedUnitPrice = this.addItemsForm.get('UpdatedUnitPrice')?.value?.trim();
@@ -208,6 +225,12 @@ updatePrice = () => {
 
   this.addItemsForm.get('updateItem')?.setValue('');
   this.addItemsForm.get('UpdatedUnitPrice')?.setValue('');
+}
+
+showDeleteProductElm() {
+  this.AddProductDetails = false;
+  this.updatePriceEle = false
+  this.deleteProductEle = !this.deleteProductEle;
 }
 
 deleteItem = () => {

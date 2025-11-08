@@ -34,10 +34,17 @@ export class ShipmentsComponent {
 
   Items: string[] = [];
 
+  itemsRequest = new FormControl('');
+  reqItems: string[] = [];
+
   units = ['Kg', 'Ltr', 'Nos'];
   ItemsInformation: { itemName: string; unitPrice: number }[] = [];
 
   showSnackbar = false;
+  ShowMessage = '';
+
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -71,6 +78,7 @@ export class ShipmentsComponent {
     });
 
     this.fromAndToValue();
+    this.getSavedItems ();
   }
 
   fromAndToValue = () => {
@@ -122,9 +130,58 @@ export class ShipmentsComponent {
     this.items.removeAt(index);
   }
 
-  showMessage() {
+  addReqItem = () => {
+    const reqItem = this.itemsRequest.value?.trim();
+    this.reqItems.push(reqItem as string);
+
+    this.itemsRequest.reset();
+  }
+  
+  getSavedItems() {
+    const storedItem = localStorage.getItem("Saved Items");
+    this.reqItems = storedItem ? JSON.parse(storedItem) : [];
+  }
+  
+  removeReqItem(index: number) {
+    this.reqItems.splice(index, 1);
+    localStorage.setItem("Saved Items", JSON.stringify(this.reqItems));
+  }
+  
+  SaveReqItems = async () => {
+
+    const itemsToSave = this.reqItems;
+    localStorage.setItem('Saved Items', JSON.stringify(itemsToSave) );
+    this.triggerSnackbar('Items Saved successfully!');
+
+  }
+
+  submitRequest = async () => {
+
+    this.SaveReqItems();
+    const RequiredItems = localStorage.getItem("Saved Items");
+    const RequiredItemsParsed = RequiredItems ? JSON.parse(RequiredItems) : [];
+    const RequestedOn = new Date().toLocaleString();
+    const RequestedBy = localStorage.getItem('UserId');
+
+    const requestDate = {RequestedOn: RequestedOn , items: RequiredItemsParsed};
+    try {
+      await this.shipmentService.submitItemRequest(requestDate, `${RequestedBy} ItemsReq` );
+      this.reqItems = []
+      localStorage.removeItem('Saved Items');
+      this.triggerSnackbar('Request submitted successfully!');
+      
+    } catch (err) {
+      this.triggerSnackbar('Failed to submit request.');
+    }
+  }
+  
+  triggerSnackbar(message: string) {
+    this.ShowMessage = message;
     this.showSnackbar = true;
-    setTimeout(() => (this.showSnackbar = false), 3000);
+  
+    setTimeout(() => {
+      this.showSnackbar = false;
+    }, 4000);
   }
 
   async onSubmit() {
@@ -161,7 +218,7 @@ export class ShipmentsComponent {
       console.log(shipmentDetails);
 
       await this.shipmentService.submitShipment(shipmentDetails, shipmentFrom);
-      this.showMessage();
+      this.triggerSnackbar('Materials Dispatched');
       this.items.clear();
     } catch (err) {
       console.error('Error submitting shipment:', err);
