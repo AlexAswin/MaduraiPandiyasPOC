@@ -5,6 +5,7 @@ import { LogInComponent } from './log-in/log-in.component';
 import { RequestComponent } from './request/request.component';
 import { TotalShipmentsComponent } from './total-shipments/total-shipments.component';
 import { authGuard } from './auth.guard';
+import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
 
 
 export const routes: Routes = [
@@ -13,6 +14,8 @@ export const routes: Routes = [
     { path: 'dispatch-details', canActivate: [authGuard], loadComponent: () => import('./request/request.component').then(m => m.RequestComponent) },
     { path: 'total-shipments', canActivate: [authGuard], loadComponent: () => import('./total-shipments/total-shipments.component').then(m => m.TotalShipmentsComponent) },
     { path: 'menu', component: MenuComponent },
+    { path: 'employeeSchedule', component:  EmployeeScheduleComponent},
+
 
 
 ];

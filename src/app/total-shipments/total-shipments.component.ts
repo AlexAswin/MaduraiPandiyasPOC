@@ -4,6 +4,7 @@ import { combineLatest } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DownloadPDFComponent } from '../download-pdf/download-pdf.component';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 
 import html2canvas from 'html2canvas';
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-total-shipments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DownloadPDFComponent ],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule ],
   templateUrl: './total-shipments.component.html',
   styleUrl: './total-shipments.component.css',
 })
@@ -42,9 +43,12 @@ export class TotalShipmentsComponent implements OnInit {
   
 
   addItemsForm!: FormGroup;
-  allItems: {
-    itemName: any; unitPrice: number;
-  }[] | undefined;
+  allItems: { itemName: any; unitPrice: number; }[] | undefined;
+
+  currentDocId: string = '';
+  purchaseDocs: { id: string, items: any[] }[] = [];
+  ItemsToPurchase: any[] = [];
+  // purchaseItems!: any[];
 
 
   constructor(private shipmentService: ShipmentService, private fb: FormBuilder, private router: Router) {
@@ -63,6 +67,7 @@ export class TotalShipmentsComponent implements OnInit {
   ngOnInit(): void {
     this.getAllShipments();
     this.getAllItems();
+    this.getPurchaseList();
   }
 
   getAllShipments = () => {
@@ -352,6 +357,74 @@ doc.text(`Grand Total: CAD${grandTotal.toFixed(2)}`, 14, currentY);
   };
 }
 
+// PurchasedItems: string[] = [];
+PurchasedItems: { name: string, docId: string }[] = [];
+
+drop(event: CdkDragDrop<{ name: string, docId: string }[]>) {
+  if (event.previousContainer === event.container) {
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  } else {
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
+}
+
+
+getPurchaseList = () => {
+  this.shipmentService.getPurchaseItems('Purchase List').subscribe(data => {
+    this.ItemsToPurchase = data.flatMap(doc => 
+      (doc.items ?? []).map((item: any)=> ({
+        name: item,
+        docId: doc.id 
+      }))
+    );
+
+    this.purchaseDocs = data.map(doc => ({
+      id: doc.id,
+      items: doc.items
+    }));
+
+    console.log('Items with document IDs:', this.ItemsToPurchase);
+  });
+}
+
+
+confirmPurchase() {
+  if (this.PurchasedItems.length === 0) return;
+
+  const deletePromises = this.purchaseDocs.map(doc => {
+
+    const itemsToDelete = doc.items.filter(itemName => 
+      this.PurchasedItems.some(p => p.name === itemName && p.docId === doc.id)
+    );
+
+    if (itemsToDelete.length > 0) {
+      return this.shipmentService.deletePurchasedItems(doc.id, itemsToDelete);
+    }
+
+    return Promise.resolve(); 
+  });
+
+  Promise.all(deletePromises)
+    .then(() => {
+      console.log("Deleted purchased items from Firebase ✅");
+
+    
+      this.ItemsToPurchase = this.ItemsToPurchase.filter(
+        item => !this.PurchasedItems.some(p => p.name === item.name && p.docId === item.docId)
+      );
+
+      this.PurchasedItems = [];
+    })
+    .catch(err => console.error("Delete error:", err));
+}
+
+
+  
 }
 
 

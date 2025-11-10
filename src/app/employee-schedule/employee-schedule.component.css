@@ -1,0 +1,152 @@
+.dropBox {
+    min-height: 60px;
+    border: 2px dashed #aaa;
+    padding: 6px;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  
+  .shift-box {
+    background: #0d6efd;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 3px 0;
+    cursor: grab;
+    font-size: 14px;
+  }
+  
+  .input-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+    display: block;
+  }
+  
+  .employee-input-container {
+    min-width: 40%;
+    margin: 10px 0;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .floating-form {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* Input box */
+  .floating-input {
+    width: 100%;
+    padding: 12px 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    transition: 0.2s ease-in-out;
+  }
+  
+  /* Label */
+  .floating-label {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    background: white;
+    padding: 0 5px;
+    font-size: 15px;
+    color: #777;
+    pointer-events: none;
+    transition: 0.2s ease all;
+  }
+  
+
+  .floating-input:focus,
+  .floating-input:not(:placeholder-shown) {
+    border-color: black;
+  }
+  
+  .floating-input:focus + .floating-label,
+  .floating-input:not(:placeholder-shown) + .floating-label {
+    top: -8px;
+    left: 10px;
+    font-size: 12px;
+    color: black;
+    font-weight: 500;
+  }
+  
+  /* Button */
+  .add-btn {
+    width: 45%;
+    min-height: 50px;
+    background: white;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .add-btn:hover {
+    background: #3559c7;
+  }
+  .dark .floating-input {
+    border-color: #888;
+    color: white;
+  }
+  
+  .dark .floating-label {
+    background: #1a1a1a;
+    color: #aaa;
+  }
+  
+  .dark .floating-input:focus + .floating-label {
+    color: #4b79ff;
+  }
+
+  .delete-btn {
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+  }
+  
+  .delete-btn:hover {
+    background: #cc0000;
+    transform: scale(1.1);
+  }
+
+  .inner-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .shift-input-container {
+    min-width: 40%;
+  }
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    padding: 20px 0px;
+  }
+
+  .cdk-drop-list {
+    justify-content: space-around;
+
+    .cdk-drag {
+      width: 20%;
+      background-color: #c8c8c8;
+      color: black;
+    }
+  }
+  
+  
