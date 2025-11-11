@@ -1,42 +1,54 @@
-<app-nav-bar></app-nav-bar>
+<!-- <app-nav-bar></app-nav-bar> -->
 
 
-<div class="container mt-3">
+<div class="container">
 
   <h1>WEEKLY SCHEDULE</h1>
 
-  <table class="table table-bordered text-center">
-    <thead class="table-dark">
-      <tr>
-        <th>Employee</th>
-        <th *ngFor="let day of days">{{day}}</th>
-      </tr>
-    </thead>
+  <div class="schedule-actions">
+    <button class="schedule-btn reset-btn" (click)="resetSchedule()">Reset Schedule</button>
+    <button class="schedule-btn save-btn" (click)="saveSchedule()">Save Schedule</button>
+  </div>
 
-    <tbody>
-      <tr *ngFor="let emp of employees">
-        <!-- <td class="fw-bold">{{emp}}</td> -->
-        <td class="fw-bold d-flex justify-content-between align-items-center px-2">
-          {{emp}}
-          <button class="delete-btn" (click)="deleteEmployee(emp)">✕</button>
-        </td>
-        <td *ngFor="let day of days">
-          <div cdkDropList [id]="day + emp" [cdkDropListData]="schedule[emp][day]"
-            [cdkDropListConnectedTo]="allDropListIds" class="dropBox p-1"
-            style="min-height:50px; border:1px dashed #aaa; border-radius:4px" (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let shift of schedule[emp][day]" cdkDrag class="shift-box badge bg-success m-1">
-              {{shift}}
+  <div class="table-responsive schedule-table-container">
+    <table class="schedule-table">
+  
+      <thead>
+        <tr>
+          <th class="emp-head">Employee</th>
+          <th *ngFor="let day of days">{{day}}</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let emp of employees">
+          <td class="employee-cell">
+            {{emp}}
+            <button class="delete-btn" (click)="deleteEmployee(emp)">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </td>
+  
+          <td *ngFor="let day of days">
+            <div cdkDropList [id]="day + emp" [cdkDropListData]="schedule[emp][day]"
+              [cdkDropListConnectedTo]="allDropListIds" class="dropBox"
+              (cdkDropListDropped)="drop($event)">
+              <div *ngFor="let shift of schedule[emp][day]" cdkDrag class="shift-badge">
+                {{shift}}
+              </div>
             </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          </td>
+        </tr>
+      </tbody>
+  
+    </table>
+  </div>
+  
 
   <h5>Available Shifts</h5>
   <div class="d-flex gap-2 mb-4" cdkDropList id="shiftList" [cdkDropListData]="shifts"
     [cdkDropListConnectedTo]="connectedDropLists" (cdkDropListDropped)="drop($event)">
-    <div *ngFor="let s of shifts" cdkDrag class="badge p-2">{{s}}</div>
+    <div *ngFor="let s of shifts; let i = index" cdkDrag class="badge p-2">{{s}} <button class="delete-btn" (click)="removeShift(i, $event)"><i class="bi bi-x-lg"></i></button></div>
   </div>
 
   <div class="inner-container">
@@ -63,5 +75,7 @@
 
       </div>
     </div>
+
   </div>
+  
 </div>

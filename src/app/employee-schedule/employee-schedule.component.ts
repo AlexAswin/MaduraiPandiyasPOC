@@ -39,48 +39,45 @@ constructor() {
 
 
 ngOnInit() {
-  // const saved = localStorage.getItem('employees');
-  // this.employees = saved ? JSON.parse(saved) : [];
-  // console.log(this.employees)
+  const savedEmployees = localStorage.getItem('employees');
+  this.employees = savedEmployees ? JSON.parse(savedEmployees) : [];
 
-  const saved = localStorage.getItem('employees');
-  this.employees = saved ? JSON.parse(saved) : [];
+  const savedShifts = localStorage.getItem('shifts');
+  this.shifts = savedShifts ? JSON.parse(savedShifts) : ['11-5', '12-Close', '5-Close'];
 
-  // Initialize schedule and drop lists
+  const savedSchedule = localStorage.getItem('schedule');
+  this.schedule = savedSchedule ? JSON.parse(savedSchedule) : {};
+
+  // Build schedule & CDK drop lists if schedule not saved
   this.allDropListIds = ['shiftList'];
-  this.schedule = {};
 
   this.employees.forEach(emp => {
-    this.schedule[emp] = {};
+    if (!this.schedule[emp]) this.schedule[emp] = {}; // Keep saved schedule if exists
     this.days.forEach(day => {
-      this.schedule[emp][day] = [];
+      if (!this.schedule[emp][day]) this.schedule[emp][day] = [];
       this.allDropListIds.push(day + emp);
     });
   });
 
   this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
-
-
-  const savedShifts = localStorage.getItem('shifts');
-  this.shifts = savedShifts ? JSON.parse(savedShifts) : ['11-5', '12-Close', '5-Close'];
 }
 
-  drop(event: CdkDragDrop<string[]>) {
-    // Dragging from the original shift list -> clone
-    if (event.previousContainer.id === 'shiftList') {
-      const shift = event.previousContainer.data[event.previousIndex];
-      event.container.data.push(shift); // clone
-    }
-
-    else if (event.previousContainer !== event.container) {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
+drop(event: CdkDragDrop<string[]>) {
+  if (event.previousContainer.id === 'shiftList') {
+    const shift = event.previousContainer.data[event.previousIndex];
+    event.container.data.push(shift);
+  } else if (event.previousContainer !== event.container) {
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
+}
+
+
+
 
   addEmployee() {
     const name = this.newEmployee.trim();
@@ -112,21 +109,17 @@ ngOnInit() {
   deleteEmployee(name: string) {
     if (!confirm(`Delete ${name}?`)) return;
   
-    // Remove from employees list
     this.employees = this.employees.filter(emp => emp !== name);
-  
-    // Remove from schedule object
     delete this.schedule[name];
   
-    // Remove related dropList IDs
     this.allDropListIds = this.allDropListIds.filter(id => !id.endsWith(name));
-  
-    // Update connected lists
     this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
   
-    // Update localStorage
+    // ✅ Save updates
     localStorage.setItem('employees', JSON.stringify(this.employees));
+    localStorage.setItem('schedule', JSON.stringify(this.schedule));
   }
+  
   
   addShift() {
     const shift = this.newShift.trim();
@@ -141,6 +134,38 @@ ngOnInit() {
     localStorage.setItem('shifts', JSON.stringify(this.shifts)); // ✅ Save
     this.newShift = '';
   }
+
+  removeShift(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.shifts.splice(index, 1);
+    localStorage.setItem('shifts', JSON.stringify(this.shifts)); // Save update
+  }
+  
+  
+
+  resetSchedule() {
+    if (!confirm("⚠️ Reset everything? This will clear ALL saved schedule data.")) return;
+
+    this.employees.forEach(emp => {
+      this.schedule[emp] = {};
+      this.days.forEach(day => {
+        this.schedule[emp][day] = [];  
+      });
+    });
+
+    localStorage.removeItem('schedule');
+  }
+  
+  
+  
+
+  saveSchedule() {
+    localStorage.setItem('schedule', JSON.stringify(this.schedule));
+    alert("✅ Schedule Saved Successfully!");
+  }
+  
+  
+  
   
   
   
