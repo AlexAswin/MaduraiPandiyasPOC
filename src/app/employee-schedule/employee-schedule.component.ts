@@ -3,11 +3,12 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-employee-schedule',
   standalone: true,
-  imports: [DragDropModule, NgFor, CommonModule,  FormsModule, NavBarComponent],
+  imports: [DragDropModule, NgFor, CommonModule,  FormsModule, NavBarComponent, RouterModule],
   templateUrl: './employee-schedule.component.html',
   styleUrl: './employee-schedule.component.css'
 })
@@ -26,15 +27,7 @@ export class EmployeeScheduleComponent {
   connectedDropLists: string[] = [];
 
 constructor() {
-  // this.employees.forEach(emp => {
-  //   this.schedule[emp] = {};
-  //   this.days.forEach(day => {
-  //     this.schedule[emp][day] = [];
-  //     this.allDropListIds.push(day + emp); // add cell ID
-  //   });
-  // });
-  // this.allDropListIds.push('shiftList');
-  // this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
+
 }
 
 
@@ -48,11 +41,11 @@ ngOnInit() {
   const savedSchedule = localStorage.getItem('schedule');
   this.schedule = savedSchedule ? JSON.parse(savedSchedule) : {};
 
-  // Build schedule & CDK drop lists if schedule not saved
+
   this.allDropListIds = ['shiftList'];
 
   this.employees.forEach(emp => {
-    if (!this.schedule[emp]) this.schedule[emp] = {}; // Keep saved schedule if exists
+    if (!this.schedule[emp]) this.schedule[emp] = {}; 
     this.days.forEach(day => {
       if (!this.schedule[emp][day]) this.schedule[emp][day] = [];
       this.allDropListIds.push(day + emp);
@@ -90,17 +83,14 @@ drop(event: CdkDragDrop<string[]>) {
   
     this.employees.push(name);
   
-    // Initialize schedule
     this.schedule[name] = {};
     this.days.forEach(day => {
       this.schedule[name][day] = [];
       this.allDropListIds.push(day + name);
     });
   
-    // Update connected lists
     this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
   
-    // Save to localStorage
     localStorage.setItem('employees', JSON.stringify(this.employees));
   
     this.newEmployee = '';
@@ -115,7 +105,6 @@ drop(event: CdkDragDrop<string[]>) {
     this.allDropListIds = this.allDropListIds.filter(id => !id.endsWith(name));
     this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
   
-    // ✅ Save updates
     localStorage.setItem('employees', JSON.stringify(this.employees));
     localStorage.setItem('schedule', JSON.stringify(this.schedule));
   }
@@ -138,10 +127,8 @@ drop(event: CdkDragDrop<string[]>) {
   removeShift(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.shifts.splice(index, 1);
-    localStorage.setItem('shifts', JSON.stringify(this.shifts)); // Save update
+    localStorage.setItem('shifts', JSON.stringify(this.shifts)); 
   }
-  
-  
 
   resetSchedule() {
     if (!confirm("⚠️ Reset everything? This will clear ALL saved schedule data.")) return;
@@ -156,9 +143,6 @@ drop(event: CdkDragDrop<string[]>) {
     localStorage.removeItem('schedule');
   }
   
-  
-  
-
   saveSchedule() {
     localStorage.setItem('schedule', JSON.stringify(this.schedule));
     alert("✅ Schedule Saved Successfully!");
