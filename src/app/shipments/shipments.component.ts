@@ -163,9 +163,9 @@ export class ShipmentsComponent {
     const RequestedOn = new Date().toLocaleString();
     const RequestedBy = localStorage.getItem('UserId');
 
-    const requestDate = {RequestedOn: RequestedOn , items: RequiredItemsParsed};
+    const requestData = {RequestedOn: RequestedOn , items: RequiredItemsParsed};
     try {
-      await this.shipmentService.submitItemRequest(requestDate, `${RequestedBy} ItemsReq` );
+      await this.shipmentService.submitItemRequest(requestData, `${RequestedBy} ItemsReq` );
       this.reqItems = []
       localStorage.removeItem('Saved Items');
       this.triggerSnackbar('Request submitted successfully!');

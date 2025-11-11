@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, doc, deleteDoc, getDocs, query, where, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, collectionData, doc, deleteDoc, getDocs, query, where, updateDoc, arrayRemove, setDoc, arrayUnion } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -75,17 +75,26 @@ export class ShipmentService {
     }
   }
 
-  async submitItemRequest(reqItemDetails: any, requestFrom: string) {
-    try {
+  submitItemRequest(data: any, docName: string) {
+    const docRef = doc(this.firestore, 'Purchase List', docName);
+  
+    return setDoc(docRef, {
+        items: arrayUnion(...data.items),
+        RequestedOn: data.RequestedOn
+    }, { merge: true });
+  } 
 
-      const orderCollection = collection(this.firestore, requestFrom);
-      const docRef = await addDoc(orderCollection, reqItemDetails);
-      return docRef.id;
-    } catch (error) {
-      console.error("Error adding shipment:", error);
-      throw error;
-    }
-  }  
+  getPurchaseItems(purchaseItems: string): Observable<any[]> {
+    const itemCollection = collection(this.firestore, purchaseItems);
+    return collectionData(itemCollection, { idField: 'id' });
+  }
+
+  deletePurchasedItems(docId: string, purchasedItems: any[]) {
+    const docRef = doc(this.firestore, "Purchase List", docId);
+    return updateDoc(docRef, {
+      items: arrayRemove(...purchasedItems)
+    });
+  }
   
 
 }

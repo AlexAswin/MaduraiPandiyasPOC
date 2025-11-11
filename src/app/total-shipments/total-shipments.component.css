@@ -256,16 +256,22 @@ button {
 
 .nav-tabs .nav-link {
 
-  color: #555;
-  font-weight: 500;
+    border: 2px solid black;
+    width: 95%;
+    background: white;
+    color: black;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
 }
 
 .nav-tabs .nav-link.active {
-  background: #0d6efd;
+
+  background: black;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
   color: white;
-  border: none;
-  border-radius: 6px 6px 0 0;
-  width: 50%;
+
 }
 
 .tab-pane {
@@ -276,5 +282,43 @@ button {
   from {opacity: 0; transform: translateY(5px);}
   to {opacity: 1; transform: translateY(0);}
 }
+
+.list-box {
+  border: 2px dashed #ccc;
+  min-height: 250px;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f8f9fa;
+}
+
+.list-item {
+  padding: 12px;
+  margin: 8px 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: grab;
+  transition: 0.2s;
+}
+
+.list-item:hover {
+  background: #e9ecef;
+}
+
+.cdk-drag-preview {
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #999;
+  padding: 10px;
+}
+
+.purchaseConfirmationsBtn {
+  margin-top: 25px;
+  width: 100%;
+  background: white;
+  border: 1px solid #908b8b;
+  border-radius: 6px;
+}
+
 
   

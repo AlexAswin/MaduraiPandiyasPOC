@@ -1,0 +1,340 @@
+.dropBox {
+    min-height: 60px;
+    border: 2px dashed #aaa;
+    padding: 6px;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  
+  .shift-box {
+    background: #0d6efd;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 3px 0;
+    cursor: grab;
+    font-size: 14px;
+  }
+  
+  .input-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+    display: block;
+  }
+  
+  .employee-input-container {
+    min-width: 40%;
+    margin: 10px 0;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .floating-form {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* Input box */
+  .floating-input {
+    width: 100%;
+    padding: 12px 10px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    transition: 0.2s ease-in-out;
+  }
+  
+  /* Label */
+  .floating-label {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    background: white;
+    padding: 0 5px;
+    font-size: 15px;
+    color: #777;
+    pointer-events: none;
+    transition: 0.2s ease all;
+  }
+  
+
+  .floating-input:focus,
+  .floating-input:not(:placeholder-shown) {
+    border-color: black;
+  }
+  
+  .floating-input:focus + .floating-label,
+  .floating-input:not(:placeholder-shown) + .floating-label {
+    top: -8px;
+    left: 10px;
+    font-size: 12px;
+    color: black;
+    font-weight: 500;
+  }
+  
+  .add-btn {
+    width: 45%;
+    min-height: 50px;
+    background: white;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .add-btn:hover {
+    background: #3559c7;
+  }
+  .dark .floating-input {
+    border-color: #888;
+    color: white;
+  }
+  
+  .dark .floating-label {
+    background: #1a1a1a;
+    color: #aaa;
+  }
+  
+  .dark .floating-input:focus + .floating-label {
+    color: #4b79ff;
+  }
+
+  .delete-btn {
+    background:black;
+    border: none;
+    color: white;
+    font-size: 12px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+  }
+  
+  .delete-btn:hover {
+    background: #cc0000;
+    transform: scale(1.1);
+  }
+
+  .inner-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .shift-input-container {
+    min-width: 40%;
+  }
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    padding: 20px 0px;
+  }
+
+  h5 {
+    padding: 20px 0px;
+  }
+
+  .cdk-drop-list {
+    justify-content: space-around;
+    padding: 20px 0px;
+    flex-wrap: wrap;
+
+    .cdk-drag {
+      background-color: #c8c8c8;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0px 40px;
+      min-height: 50px;
+    }
+  }
+
+  .delete-shift {
+    font-size: 12px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.3);
+    padding: 2px 5px;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .delete-shift:hover {
+    background: red;
+    color: white;
+  }
+  
+.schedule-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px 0px;
+}
+
+.schedule-btn {
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.reset-btn {
+  background-color: #ffb300;
+  color: #222;
+}
+
+.reset-btn:hover {
+  background-color: #ffa000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Table Wrapper for Mobile Scroll */
+/* Wrapper enables horizontal scroll */
+.schedule-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Table */
+.schedule-table {
+  border-collapse: collapse;
+  min-width: 750px; /* forces scroll on mobile */
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+
+.schedule-table thead th {
+  background: #2b2d42;
+  color: #fff;
+  padding: 12px;
+  text-transform: uppercase;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.employee-cell,
+.emp-head {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 20;
+  min-width: 140px;
+  /* max-width: 140px; */
+  text-align: left;
+  border-right: 2px solid #e5e5e5;
+}
+
+
+.emp-head {
+  background: #2b2d42;
+  color: white;
+  z-index: 25;
+}
+
+
+.schedule-table td {
+  border: 1px solid #e0e0e0;
+  padding: 6px;
+  vertical-align: top;
+  height: 80px;
+  min-width: 110px;
+}
+
+
+.schedule-table tr:nth-child(even) td {
+  background: #f9f9f9;
+}
+
+.employee-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  font-weight: 600;
+  background: #fff;
+}
+
+
+.dropBox {
+  min-height: 55px;
+  border: 1.5px dashed #c9c9c9;
+  border-radius: 6px;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;
+  transition: 0.2s;
+}
+
+.dropBox:hover {
+  border-color: #4a69ff;
+  background: #f1f5ff;
+}
+
+
+.shift-badge {
+  background: #4a69ff;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: grab;
+  transition: 0.2s;
+}
+.shift-badge:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+  background: #2f4cf5;
+}
+
+
+@media (max-width: 576px) {
+  .cdk-drag {
+    min-width: 100%;
+  }
+
+  .inner-container {
+    flex-direction: column;
+
+    .employee-input-container {
+      min-width: 100%;
+    }
+    .shift-input-container {
+      min-width: 100%;
+    }
+  }
+}
+
+
+  
+  
