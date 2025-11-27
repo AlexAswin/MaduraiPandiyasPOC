@@ -1,0 +1,68 @@
+<button class="btn menuBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+    <i class="bi bi-text-paragraph"></i>
+  </button>
+  
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Madurai Pandiyas</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+  
+    <div class="offcanvas-body">
+      <div>
+        <button class="reqItemBtn" 
+                data-bs-toggle="modal" 
+                data-bs-target="#staticBackdrop" 
+                data-bs-dismiss="offcanvas">
+          Items Request
+        </button>
+        <button class="reqItemBtn" [routerLink]="'/employeeSchedule'" data-bs-dismiss="offcanvas">Employee Schedule</button>
+        <button class="reqItemBtn" [routerLink]="'/employeeSchedule'" data-bs-dismiss="offcanvas" [routerLink]="['/menu']">View Menu</button>
+  
+      </div>
+  
+      <div>
+        <button class="logOutBtn" (click)="logOutUser()" data-bs-dismiss="offcanvas">
+          <svg width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+          </svg>
+          <span>LogOut</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Request Items</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <input type="text" class="form-control" placeholder="Enter Items" [formControl]="itemsRequest">
+          <button [disabled]="!itemsRequest.value?.trim()" class="btn btn-primary mt-2" (click)="addReqItem()">ADD</button>
+        </div>
+  
+        <div *ngIf="reqItems.length > 0" class="reqList">
+          <label>Required Items</label>
+          <ul class="list-group">
+            <li *ngFor="let item of reqItems; let i = index"
+              class="list-group-item d-flex justify-content-between align-items-center">
+              {{ item }} 
+              <button type="button" class="btn btn-sm btn-danger" (click)="removeReqItem(i)"><i
+                  class="bi bi-x-lg"></i></button>
+            </li>
+          </ul>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="submitRequest()" [disabled]="reqItems.length === 0">Submit Request</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="SaveReqItems()" [disabled]="reqItems.length === 0">Save Items</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>

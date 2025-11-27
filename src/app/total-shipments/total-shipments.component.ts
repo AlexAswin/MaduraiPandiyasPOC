@@ -33,6 +33,8 @@ export class TotalShipmentsComponent implements OnInit {
   AddProductDetails: boolean = false;
   updatePriceEle: boolean = false;
   deleteProductEle: boolean = false;
+  storeChange: boolean = false;
+  activeStore: string = 'Madurai Pandiyas'
 
   locations = ['Total Shipments', 'Madurai Pandiyas', 'Madurai Pandiyas Elite'];
   fromStoreControl = new FormControl('Total Shipments');
@@ -73,7 +75,7 @@ export class TotalShipmentsComponent implements OnInit {
   getAllShipments = () => {
     const maduraiPandiyas = 'Madurai Pandiyas';
     const maduraiPandiyasElite = 'Madurai Pandiyas Elite';
-
+  
     combineLatest([
       this.shipmentService.getAllShipmentDetails(maduraiPandiyas),
       this.shipmentService.getAllShipmentDetails(maduraiPandiyasElite),
@@ -82,25 +84,28 @@ export class TotalShipmentsComponent implements OnInit {
         this.dispatchedFromMaduraiPandiyas = Array.isArray(resMadurai)
           ? resMadurai
           : Object.values(resMadurai ?? []);
+  
         this.dispatchedFromMaduraiPandiyasElite = Array.isArray(resElite)
           ? resElite
           : Object.values(resElite ?? []);
-
+  
         this.totalDispatchedItems = [
           ...(this.dispatchedFromMaduraiPandiyas ?? []),
           ...(this.dispatchedFromMaduraiPandiyasElite ?? []),
         ];
-
-        console.log('Total dispatched items:', this.totalDispatchedItems);
+  
+        this.totalDispatchedItems.sort((a: any, b: any) => {
+          return new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime();
+        });
+  
+        console.log('Sorted dispatched items:', this.totalDispatchedItems);
       },
       (error) => {
         console.error('Error fetching shipments:', error);
       }
     );
-
-    console.log(this.totalDispatchedItems);
-    
   };
+  
 
   getAllItems = () => {
       this.shipmentService.getAllItemsDetails('Items').subscribe(res => {
@@ -114,14 +119,16 @@ export class TotalShipmentsComponent implements OnInit {
   }
 
   onStoreChange = (event: Event) => {
-
+    this.storeChange = true;
     const storeName = event.target as HTMLSelectElement;
 
     if (storeName.value === 'Madurai Pandiyas') {
       this.MaduraiPandiyas = true;
+      this.MaduraiPandiyasElite = false;
       this.totalDispatchedItems = this.dispatchedFromMaduraiPandiyas;
     } else if (storeName.value === 'Madurai Pandiyas Elite') {
       this.MaduraiPandiyasElite = true;
+      this.MaduraiPandiyas = false;
       this.totalDispatchedItems = this.dispatchedFromMaduraiPandiyasElite;
     } else {
       this.getTotalDispatchedItems();
@@ -136,8 +143,18 @@ export class TotalShipmentsComponent implements OnInit {
   }
 
   applyFilters = () => {
-    this.getTotalDispatchedItems();
+   
 
+    let filterItems: any[] = [];
+
+    if (this.MaduraiPandiyas) {
+      filterItems = this.dispatchedFromMaduraiPandiyas ?? [];
+    } else if (this.MaduraiPandiyasElite) {
+      filterItems = this.dispatchedFromMaduraiPandiyasElite ?? [];
+    } else {
+      filterItems = this.totalDispatchedItems ?? [];
+    }
+    
     const startDateEle = document.getElementById('startDate') as HTMLInputElement | null;
     const endDateEle = document.getElementById('endDate') as HTMLInputElement | null;
   
@@ -153,9 +170,7 @@ export class TotalShipmentsComponent implements OnInit {
       ? new Date(endDateEle.value + 'T23:59:59')
       : null;
   
-    console.log('Filter range:', startDate, endDate);
-  
-    this.filteredShipments = (this.totalDispatchedItems ?? [])
+    this.filteredShipments = (filterItems ?? [])
       .filter((item: any) => {
         const dispatchedDate = new Date(item.DispatchedTime);
   
@@ -169,8 +184,6 @@ export class TotalShipmentsComponent implements OnInit {
           new Date(b.DispatchedTime).getTime() -
           new Date(a.DispatchedTime).getTime()
       );
-  
-    console.log('Filtered Shipments:', this.filteredShipments);
 
     this.totalDispatchedItems = this.filteredShipments;
   };
@@ -307,7 +320,6 @@ this.totalDispatchedItems.forEach((shipment: any) => {
       totalPrice: totalPrice,
     });
 
-    // Add to date total
     groupedByDate[date].total += totalPrice;
   });
 });
@@ -357,7 +369,6 @@ doc.text(`Grand Total: CAD${grandTotal.toFixed(2)}`, 14, currentY);
   };
 }
 
-// PurchasedItems: string[] = [];
 PurchasedItems: { name: string, docId: string }[] = [];
 
 drop(event: CdkDragDrop<{ name: string, docId: string }[]>) {

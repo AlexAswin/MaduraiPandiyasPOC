@@ -49,7 +49,6 @@ export class MenuComponent  implements OnInit {
   
       this.groupedMenuItem = this.menuItems.reduce((groups: { [key: string]: any[] }, item: any) => {
         
-        // Use 'Category' as per your CSV header name
         const category = (item.Category ? String(item.Category) : 'Uncategorized').trim();
         if (!groups[category]) {
           groups[category] = [];
@@ -62,7 +61,7 @@ export class MenuComponent  implements OnInit {
     });  
 
     const originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
-      return 0;  // No sorting, preserve original order
+      return 0;
     }
   }
 
