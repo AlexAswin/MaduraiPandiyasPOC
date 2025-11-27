@@ -10,9 +10,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { ShipmentService } from '../shipment.service';
-import { RequestComponent } from '../request/request.component';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { Router, RouterModule } from '@angular/router';
+import { SideOffCanvasComponent } from '../side-off-canvas/side-off-canvas.component';
 
 @Component({
   selector: 'app-shipments',
@@ -21,9 +21,9 @@ import { Router, RouterModule } from '@angular/router';
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
-    RequestComponent,
     NavBarComponent,
     RouterModule,
+    SideOffCanvasComponent
   ],
   templateUrl: './shipments.component.html',
   styleUrl: './shipments.component.css',
@@ -42,9 +42,6 @@ export class ShipmentsComponent {
 
   showSnackbar = false;
   ShowMessage = '';
-
-
-
 
   constructor(
     private fb: FormBuilder,
@@ -130,52 +127,14 @@ export class ShipmentsComponent {
     this.items.removeAt(index);
   }
 
-  addReqItem = () => {
-    const reqItem = this.itemsRequest.value?.trim();
-    this.reqItems.push(reqItem as string);
-
-    this.itemsRequest.reset();
-  }
   
   getSavedItems() {
     const storedItem = localStorage.getItem("Saved Items");
     this.reqItems = storedItem ? JSON.parse(storedItem) : [];
   }
   
-  removeReqItem(index: number) {
-    this.reqItems.splice(index, 1);
-    localStorage.setItem("Saved Items", JSON.stringify(this.reqItems));
-  }
-  
-  SaveReqItems = async () => {
 
-    const itemsToSave = this.reqItems;
-    localStorage.setItem('Saved Items', JSON.stringify(itemsToSave) );
-    this.triggerSnackbar('Items Saved successfully!');
-
-  }
-
-  submitRequest = async () => {
-
-    this.SaveReqItems();
-    const RequiredItems = localStorage.getItem("Saved Items");
-    const RequiredItemsParsed = RequiredItems ? JSON.parse(RequiredItems) : [];
-    const RequestedOn = new Date().toLocaleString();
-    const RequestedBy = localStorage.getItem('UserId');
-
-    const requestData = {RequestedOn: RequestedOn , items: RequiredItemsParsed};
-    try {
-      await this.shipmentService.submitItemRequest(requestData, `${RequestedBy} ItemsReq` );
-      this.reqItems = []
-      localStorage.removeItem('Saved Items');
-      this.triggerSnackbar('Request submitted successfully!');
-      
-    } catch (err) {
-      this.triggerSnackbar('Failed to submit request.');
-    }
-  }
-  
-  triggerSnackbar(message: string) {
+  triggerSnackbar(message: any) {
     this.ShowMessage = message;
     this.showSnackbar = true;
   
@@ -224,11 +183,6 @@ export class ShipmentsComponent {
       console.error('Error submitting shipment:', err);
       alert('Error submitting shipment. Check console for details.');
     }
-  }
-
-  logOutUser = () => {
-    localStorage.removeItem('UserId');
-    this.router.navigate(['/']);
   }
 
   
