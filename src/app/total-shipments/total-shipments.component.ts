@@ -131,6 +131,8 @@ export class TotalShipmentsComponent implements OnInit {
       this.MaduraiPandiyas = false;
       this.totalDispatchedItems = this.dispatchedFromMaduraiPandiyasElite;
     } else {
+      this.MaduraiPandiyasElite = false;
+      this.MaduraiPandiyas = false;
       this.getTotalDispatchedItems();
     }
   }
