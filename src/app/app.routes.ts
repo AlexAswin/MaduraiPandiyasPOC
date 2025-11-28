@@ -6,6 +6,7 @@ import { RequestComponent } from './request/request.component';
 import { TotalShipmentsComponent } from './total-shipments/total-shipments.component';
 import { authGuard } from './auth.guard';
 import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
+import { TimeSheetComponent } from './time-sheet/time-sheet.component';
 
 
 export const routes: Routes = [
@@ -15,7 +16,6 @@ export const routes: Routes = [
     { path: 'total-shipments', canActivate: [authGuard], loadComponent: () => import('./total-shipments/total-shipments.component').then(m => m.TotalShipmentsComponent) },
     { path: 'menu', component: MenuComponent },
     { path: 'employeeSchedule', component:  EmployeeScheduleComponent},
-
-
+    { path: 'timeSheet', component: TimeSheetComponent },
 
 ];

@@ -1,0 +1,69 @@
+<!-- <app-nav-bar></app-nav-bar> -->
+
+<div class="container mt-4">
+    <h2>Employee Time Sheet</h2>
+    <div class="d-flex justify-content-between">
+        <div><button class="logOutBtn"><i class="bi bi-arrow-left-circle"></i></button></div>
+
+        <div class="d-flex date-range-container align-items-center">
+            <input type="date" class="form-control me-2" [(ngModel)]="dateFrom">
+            <span class="mx-2 fw-bold">TO</span>
+            <input type="date" class="form-control" [(ngModel)]="dateTo">
+        </div>
+
+        <button class="reset-btn" (click)="resetAll()">Reset All</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="sticky-col">Employee</th>
+                    <th *ngFor="let day of days">{{ day }}</th>
+                    <th>Total Hours</th>
+                    <th>Hourly Rate</th>
+                    <th>Total Pay</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let emp of employees; let i = index">
+                    <td class="sticky-col">
+                        <div class="employee-cell">
+                            {{ emp.name }}
+                            <button class="btn btn-sm btn-danger ms-2" (click)="deleteEmployee(i)">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </td>
+
+                    <td *ngFor="let day of days; let d = index">
+                        <input type="number" min="0" class="form-control" [(ngModel)]="emp.dailyHours[d]"
+                            (input)="updateShift()">
+                    </td>
+
+                    <td>{{ getTotalHours(emp) }}</td>
+                    <td>{{ hourlyRate | currency }}</td>
+                    <td>{{ getTotalPay(emp) | currency }}</td>
+                </tr>
+            </tbody>
+
+            <tfoot *ngIf="employees.length">
+                <tr class="fw-bold">
+                    <td colspan="8" class="text-end">TOTAL:</td>
+                    <td>{{ totalAllHours }}</td>
+                    <td> {{ hourlyRate | currency }}</td>
+                    <td>{{ totalAllPay | currency }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="mb-3 mt-5 d-flex justify-content-between">
+        <input type="text" class="add-employee" placeholder="Enter Employee Name" [(ngModel)]="newEmployeeName">
+        <button class="reset-btn" (click)="addEmployee()">Add Employee</button>
+
+        <input #newRate type="text" class="add-employee" placeholder="Update Hourly Rate">
+        <button class="reset-btn" (click)="updateHourlyRate(newRate.value)">Update Rate</button>
+    </div>
+
+</div>
