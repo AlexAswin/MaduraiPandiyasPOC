@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { RouterModule } from '@angular/router';
 
 
 interface Employee {
@@ -13,7 +14,7 @@ interface Employee {
 @Component({
   selector: 'app-time-sheet',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, NavBarComponent ],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, NavBarComponent, RouterModule ],
   templateUrl: './time-sheet.component.html',
   styleUrl: './time-sheet.component.css'
 })

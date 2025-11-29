@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule, NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
@@ -12,145 +12,139 @@ import { RouterModule } from '@angular/router';
   templateUrl: './employee-schedule.component.html',
   styleUrl: './employee-schedule.component.css'
 })
-export class EmployeeScheduleComponent {
-  days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+export class EmployeeScheduleComponent implements OnInit {
+  days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   employees: string[] = [];
   newEmployee = '';
 
-  shifts = ['11-5', '12-Close', '5-Close'];
-  newShift = '';
+  TotalHours: number = 0;
+  TotalSalary: number = 0;
+  hourlyRate: number = 15;
 
   schedule: any = {};
 
-  allDropListIds: string[] = [];
+  constructor() {}
 
-  connectedDropLists: string[] = [];
+  ngOnInit() {
+    const savedEmployees = localStorage.getItem('employees');
+    this.employees = savedEmployees ? JSON.parse(savedEmployees) : [];
 
-constructor() {
+    const savedSchedule = localStorage.getItem('schedule');
+    this.schedule = savedSchedule ? JSON.parse(savedSchedule) : {};
 
-}
-
-
-ngOnInit() {
-  const savedEmployees = localStorage.getItem('employees');
-  this.employees = savedEmployees ? JSON.parse(savedEmployees) : [];
-
-  const savedShifts = localStorage.getItem('shifts');
-  this.shifts = savedShifts ? JSON.parse(savedShifts) : ['11-5', '12-Close', '5-Close'];
-
-  const savedSchedule = localStorage.getItem('schedule');
-  this.schedule = savedSchedule ? JSON.parse(savedSchedule) : {};
-
-
-  this.allDropListIds = ['shiftList'];
-
-  this.employees.forEach(emp => {
-    if (!this.schedule[emp]) this.schedule[emp] = {}; 
-    this.days.forEach(day => {
-      if (!this.schedule[emp][day]) this.schedule[emp][day] = [];
-      this.allDropListIds.push(day + emp);
+    this.employees.forEach(emp => {
+      if (!this.schedule[emp]) this.schedule[emp] = {};
+      this.days.forEach(day => {
+        if (!this.schedule[emp][day]) this.schedule[emp][day] = '';
+      });
+      if (!this.schedule[emp].totalHours) this.schedule[emp].totalHours = 0;
     });
-  });
 
-  this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
-}
-
-drop(event: CdkDragDrop<string[]>) {
-  if (event.previousContainer.id === 'shiftList') {
-    const shift = event.previousContainer.data[event.previousIndex];
-    event.container.data.push(shift);
-  } else if (event.previousContainer !== event.container) {
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
+    this.updateTotalHoursAllEmployees();
   }
-}
 
+  // ------------------- Hours Calculation -------------------
+  calculateShiftHours(shift: string): number {
+    if (!shift) return 0;
+  
+    const [startStr, endStr] = shift.split('-').map(t => t.trim());
+    if (!startStr || !endStr) return 0;
+  
+    const to24HourMinutes = (time: string): number => {
+      // Match formats like "5:00PM", "5PM", "10:30AM"
+      const match = time.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+      if (!match) return 0;
+  
+      let hour = parseInt(match[1], 10);
+      const minute = match[2] ? parseInt(match[2], 10) : 0;
+      const period = match[3]?.toUpperCase();
+  
+      // Convert to 24-hour format
+      if (period === 'PM' && hour !== 12) hour += 12;
+      if (period === 'AM' && hour === 12) hour = 0;
+  
+      // If no AM/PM specified, apply store rules
+      if (!period) {
+        // 10 <= hour < 17 → AM (morning/afternoon)
+        // hour >= 17 or < 10 → PM (evening)
+        if (hour < 10 || hour >= 17) hour += 12;
+      }
+  
+      return hour * 60 + minute;
+    };
+  
+    let start = to24HourMinutes(startStr);
+    let end = to24HourMinutes(endStr);
+  
+    // If shift crosses midnight (store closes at 12AM)
+    if (end < start) end += 24 * 60;
+  
+    return (end - start) / 60;
+  }
+  
+  
+  
 
+  
 
+  updateTotalHours(emp: string) {
+    let total = 0;
+    this.days.forEach(day => {
+      const shift = this.schedule[emp][day];
+      total += this.calculateShiftHours(shift);
+    });
+    this.schedule[emp].totalHours = total;
+    this.updateTotalHoursAllEmployees();
+    localStorage.setItem('schedule', JSON.stringify(this.schedule));
+  }
 
+  updateTotalHoursAllEmployees() {
+    this.TotalHours = this.employees.reduce(
+      (sum, emp) => sum + (this.schedule[emp].totalHours || 0),
+      0
+    );
+    this.TotalSalary = this.TotalHours * this.hourlyRate;
+  }
+
+  // ------------------- Employees -------------------
   addEmployee() {
     const name = this.newEmployee.trim();
-    if (!name) return;
-  
-    if (this.employees.includes(name)) {
-      alert("Employee already exists!");
-      return;
-    }
-  
+    if (!name || this.employees.includes(name)) return;
+
     this.employees.push(name);
-  
     this.schedule[name] = {};
-    this.days.forEach(day => {
-      this.schedule[name][day] = [];
-      this.allDropListIds.push(day + name);
-    });
-  
-    this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
-  
+    this.days.forEach(day => (this.schedule[name][day] = ''));
+    this.schedule[name].totalHours = 0;
+
     localStorage.setItem('employees', JSON.stringify(this.employees));
-  
+    localStorage.setItem('schedule', JSON.stringify(this.schedule));
+
     this.newEmployee = '';
   }
 
   deleteEmployee(name: string) {
-    if (!confirm(`Delete ${name}?`)) return;
-  
-    this.employees = this.employees.filter(emp => emp !== name);
+    this.employees = this.employees.filter(e => e !== name);
     delete this.schedule[name];
-  
-    this.allDropListIds = this.allDropListIds.filter(id => !id.endsWith(name));
-    this.connectedDropLists = this.allDropListIds.filter(id => id !== 'shiftList');
-  
     localStorage.setItem('employees', JSON.stringify(this.employees));
     localStorage.setItem('schedule', JSON.stringify(this.schedule));
-  }
-  
-  
-  addShift() {
-    const shift = this.newShift.trim();
-    if (!shift) return;
-  
-    if (this.shifts.includes(shift)) {
-      alert("Shift already exists!");
-      return;
-    }
-  
-    this.shifts.push(shift);
-    localStorage.setItem('shifts', JSON.stringify(this.shifts)); // ✅ Save
-    this.newShift = '';
-  }
-
-  removeShift(index: number, event: MouseEvent) {
-    event.stopPropagation();
-    this.shifts.splice(index, 1);
-    localStorage.setItem('shifts', JSON.stringify(this.shifts)); 
+    this.updateTotalHoursAllEmployees();
   }
 
   resetSchedule() {
-    if (!confirm("⚠️ Reset everything? This will clear ALL saved schedule data.")) return;
-
     this.employees.forEach(emp => {
-      this.schedule[emp] = {};
-      this.days.forEach(day => {
-        this.schedule[emp][day] = [];  
-      });
+      this.days.forEach(day => (this.schedule[emp][day] = ''));
+      this.schedule[emp].totalHours = 0;
     });
-
     localStorage.removeItem('schedule');
+    this.updateTotalHoursAllEmployees();
   }
-  
+
   saveSchedule() {
     localStorage.setItem('schedule', JSON.stringify(this.schedule));
-    alert("✅ Schedule Saved Successfully!");
+    alert('Schedule saved successfully!');
   }
-  
-  
-  
-  
-  
-  
+
+  updateHourlyRate(value: any) {
+    this.hourlyRate = value;
+  }
 }
