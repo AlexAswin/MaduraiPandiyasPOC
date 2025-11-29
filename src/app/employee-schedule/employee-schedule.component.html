@@ -12,14 +12,15 @@
 
   <div class="table-responsive schedule-table-container">
     <table class="schedule-table">
-  
+
       <thead>
         <tr>
           <th class="emp-head">Employee</th>
           <th *ngFor="let day of days">{{day}}</th>
+          <th>Total Hrs</th>
         </tr>
       </thead>
-  
+
       <tbody>
         <tr *ngFor="let emp of employees">
           <td class="employee-cell">
@@ -28,54 +29,55 @@
               <i class="bi bi-x-lg"></i>
             </button>
           </td>
-  
+
           <td *ngFor="let day of days">
-            <div cdkDropList [id]="day + emp" [cdkDropListData]="schedule[emp][day]"
-              [cdkDropListConnectedTo]="allDropListIds" class="dropBox"
-              (cdkDropListDropped)="drop($event)">
-              <div *ngFor="let shift of schedule[emp][day]" cdkDrag class="shift-badge">
-                {{shift}}
-              </div>
-            </div>
+            <input type="text"
+                   class="shift-input"
+                   
+                   [(ngModel)]="schedule[emp][day]"
+                   (ngModelChange)="updateTotalHours(emp)">
           </td>
+
+          <td>{{ schedule[emp].totalHours || 0 }}</td>
         </tr>
       </tbody>
-  
+
+      <tfoot>
+        <tr class="fw-bold">
+          <td [attr.colspan]="days.length + 1" class="text-end">Total Hours All Employees:</td>
+          <td>{{ TotalHours }}</td>
+        </tr>
+
+        <tr class="fw-bold">
+          <td [attr.colspan]="days.length + 1" class="text-end">Hourly Salary:</td>
+          <td>{{ hourlyRate | currency }}</td>
+        </tr>
+
+        <tr class="fw-bold">
+          <td [attr.colspan]="days.length + 1" class="text-end">Total Salary:</td>
+          <td>{{ TotalSalary | currency }}</td>
+        </tr>
+      </tfoot>
+
     </table>
   </div>
-  
 
-  <h5>Available Shifts</h5>
-  <div class="d-flex gap-2 mb-4" cdkDropList id="shiftList" [cdkDropListData]="shifts"
-    [cdkDropListConnectedTo]="connectedDropLists" (cdkDropListDropped)="drop($event)">
-    <div *ngFor="let s of shifts; let i = index" cdkDrag class="badge p-2">{{s}} <button class="delete-btn" (click)="removeShift(i, $event)"><i class="bi bi-x-lg"></i></button></div>
-  </div>
-
+  <!-- Add Employee -->
   <div class="inner-container">
     <div class="employee-input-container">
-      <div class="floating-form">
+      <div class="mb-3 mt-5 d-flex gap-5 justify-content-between addemployee">
+        <div class="d-flex justify-content-between w-100 addemployee">
+          <input id="empInput" type="text" class="floating-input" placeholder="Enter Employee Name" [(ngModel)]="newEmployee" />
+          <button class="add-btn" (click)="addEmployee()">Add Employee</button>
+        </div>
 
-        <input id="empInput" type="text" class="floating-input" placeholder=" " [(ngModel)]="newEmployee" />
-
-        <label class="floating-label" for="empInput">Enter Employee Name</label>
-
-        <button class="add-btn" (click)="addEmployee()">Add</button>
-
-      </div>
+        <div class="d-flex justify-content-between w-100 addemployee">
+          <input #newRate type="text" class="floating-input" placeholder="Update Hourly Rate">
+          <button class="add-btn" (click)="updateHourlyRate(newRate.value)">Update Rate</button>
+        </div>
     </div>
-
-    <div class="shift-input-container">
-      <div class="floating-form">
-
-        <input id="shiftInput" type="text" class="floating-input" placeholder=" " [(ngModel)]="newShift" />
-
-        <label class="floating-label" for="shiftInput">Enter Shift Timing</label>
-
-        <button class="add-btn" (click)="addShift()">Add Shift</button>
-
-      </div>
     </div>
-
   </div>
-  
+
 </div>
+
