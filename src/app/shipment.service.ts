@@ -11,10 +11,49 @@ export class ShipmentService {
 
   async submitShipment(dispatchedItemDetails: any, shipmentFrom: string) {
     try {
-
       const orderCollection = collection(this.firestore, shipmentFrom);
-      const docRef = await addDoc(orderCollection, dispatchedItemDetails);
-      return docRef.id;
+  
+      // Extract only the date part from DispatchedTime (YYYY-MM-DD)
+      const dispatchedDate = new Date(dispatchedItemDetails.DispatchedTime)
+                                .toDateString();
+  
+      // Step 1: Query for documents with the SAME date
+      const q = query(
+        orderCollection,
+        where("DispatchedDate", "==", dispatchedDate)
+      );
+  
+      const result = await getDocs(q);
+  
+      // Step 2: If a document with same date exists → update it
+      if (!result.empty) {
+        const existingDoc = result.docs[0];
+  
+        const existingData: any = existingDoc.data();
+  
+        const mergedItems = [
+          ...existingData.shipmentItemsDetails,
+          ...dispatchedItemDetails.shipmentItemsDetails
+        ];
+  
+        await updateDoc(existingDoc.ref, {
+          shipmentItemsDetails: mergedItems,
+          shipmentGrandTotal:
+            existingData.shipmentGrandTotal +
+            dispatchedItemDetails.shipmentGrandTotal
+        });
+  
+        return existingDoc.id; // return updated document ID
+      }
+  
+      // Step 3: If no document exists → create a new one
+      const newDocRef = await addDoc(orderCollection, {
+        ...dispatchedItemDetails,
+        DispatchedDate: dispatchedDate
+      });
+  
+      return newDocRef.id;
+  
     } catch (error) {
       console.error("Error adding shipment:", error);
       throw error;

@@ -1,8 +1,7 @@
 /* ---------------- Container ---------------- */
-.container {
-  max-width: 1200px;
+.parent-container {
   margin: 0 auto;
-  padding: 20px;
+  padding: 0px 20px;
   font-family: 'Inter', sans-serif;
 }
 

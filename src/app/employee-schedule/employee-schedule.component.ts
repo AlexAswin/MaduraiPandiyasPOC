@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { RouterModule } from '@angular/router';
+import { ScheduleService } from '../schedule.service';
 
 @Component({
   selector: 'app-employee-schedule',
@@ -16,118 +17,53 @@ export class EmployeeScheduleComponent implements OnInit {
   days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   employees: string[] = [];
   newEmployee = '';
-
+  
   TotalHours: number = 0;
   TotalSalary: number = 0;
   hourlyRate: number = 15;
+  storeId: string | null = null;
 
-  schedule: any = {};
+  schedule: { [employee: string]: { [day: string]: string | number, totalHours: number } } = {};
 
-  constructor() {}
+  constructor(private scheduleService: ScheduleService) {}
 
-  ngOnInit() {
-    const savedEmployees = localStorage.getItem('employees');
-    this.employees = savedEmployees ? JSON.parse(savedEmployees) : [];
+  async ngOnInit() {
+    this.storeId = localStorage.getItem('UserId');
+    if (!this.storeId) return;
 
-    const savedSchedule = localStorage.getItem('schedule');
-    this.schedule = savedSchedule ? JSON.parse(savedSchedule) : {};
-
-    this.employees.forEach(emp => {
-      if (!this.schedule[emp]) this.schedule[emp] = {};
-      this.days.forEach(day => {
-        if (!this.schedule[emp][day]) this.schedule[emp][day] = '';
-      });
-      if (!this.schedule[emp].totalHours) this.schedule[emp].totalHours = 0;
-    });
-
+    await this.getWeeklySchedule();
+    this.initializeScheduleDefaults();
     this.updateTotalHoursAllEmployees();
   }
 
-  // ------------------- Hours Calculation -------------------
-  calculateShiftHours(shift: string): number {
-    if (!shift) return 0;
-  
-    const [startStr, endStr] = shift.split('-').map(t => t.trim());
-    if (!startStr || !endStr) return 0;
-  
-    const to24HourMinutes = (time: string): number => {
-      // Match formats like "5:00PM", "5PM", "10:30AM"
-      const match = time.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);
-      if (!match) return 0;
-  
-      let hour = parseInt(match[1], 10);
-      const minute = match[2] ? parseInt(match[2], 10) : 0;
-      const period = match[3]?.toUpperCase();
-  
-      // Convert to 24-hour format
-      if (period === 'PM' && hour !== 12) hour += 12;
-      if (period === 'AM' && hour === 12) hour = 0;
-  
-      // If no AM/PM specified, apply store rules
-      if (!period) {
-        // 10 <= hour < 17 → AM (morning/afternoon)
-        // hour >= 17 or < 10 → PM (evening)
-        if (hour < 10 || hour >= 17) hour += 12;
-      }
-  
-      return hour * 60 + minute;
-    };
-  
-    let start = to24HourMinutes(startStr);
-    let end = to24HourMinutes(endStr);
-  
-    // If shift crosses midnight (store closes at 12AM)
-    if (end < start) end += 24 * 60;
-  
-    return (end - start) / 60;
-  }
-  
-  
-  
 
-  
-
-  updateTotalHours(emp: string) {
-    let total = 0;
-    this.days.forEach(day => {
-      const shift = this.schedule[emp][day];
-      total += this.calculateShiftHours(shift);
-    });
-    this.schedule[emp].totalHours = total;
-    this.updateTotalHoursAllEmployees();
-    localStorage.setItem('schedule', JSON.stringify(this.schedule));
-  }
-
-  updateTotalHoursAllEmployees() {
-    this.TotalHours = this.employees.reduce(
-      (sum, emp) => sum + (this.schedule[emp].totalHours || 0),
-      0
-    );
-    this.TotalSalary = this.TotalHours * this.hourlyRate;
-  }
-
-  // ------------------- Employees -------------------
   addEmployee() {
     const name = this.newEmployee.trim();
     if (!name || this.employees.includes(name)) return;
 
     this.employees.push(name);
-    this.schedule[name] = {};
+    this.schedule[name] = {totalHours: 0};
     this.days.forEach(day => (this.schedule[name][day] = ''));
     this.schedule[name].totalHours = 0;
 
-    localStorage.setItem('employees', JSON.stringify(this.employees));
-    localStorage.setItem('schedule', JSON.stringify(this.schedule));
-
+    this.saveScheduleToDB();
     this.newEmployee = '';
   }
 
   deleteEmployee(name: string) {
     this.employees = this.employees.filter(e => e !== name);
     delete this.schedule[name];
-    localStorage.setItem('employees', JSON.stringify(this.employees));
-    localStorage.setItem('schedule', JSON.stringify(this.schedule));
     this.updateTotalHoursAllEmployees();
+    this.saveScheduleToDB();
+  }
+
+  updateHourlyRate(input: HTMLInputElement) {
+    const value = Number(input.value);
+    if (isNaN(value) || value <= 0) return;
+    this.hourlyRate = value;
+    this.updateTotalHoursAllEmployees();
+    this.saveScheduleToDB();
+    input.value = '';
   }
 
   resetSchedule() {
@@ -135,16 +71,124 @@ export class EmployeeScheduleComponent implements OnInit {
       this.days.forEach(day => (this.schedule[emp][day] = ''));
       this.schedule[emp].totalHours = 0;
     });
-    localStorage.removeItem('schedule');
     this.updateTotalHoursAllEmployees();
+    this.saveScheduleToDB();
   }
 
   saveSchedule() {
-    localStorage.setItem('schedule', JSON.stringify(this.schedule));
-    alert('Schedule saved successfully!');
+    this.updateTotalHoursAllEmployees();
+    this.saveScheduleToDB(true);
   }
 
-  updateHourlyRate(value: any) {
-    this.hourlyRate = value;
+
+  calculateShiftHours(shift: string): number {
+    if (!shift) return 0;
+
+    const [startStr, endStr] = shift.split('-').map(t => t.trim());
+    if (!startStr || !endStr) return 0;
+
+    const to24HourMinutes = (time: string): number => {
+      const match = time.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+      if (!match) return 0;
+
+      let hour = parseInt(match[1], 10);
+      const minute = match[2] ? parseInt(match[2], 10) : 0;
+      const period = match[3]?.toUpperCase();
+
+      if (period === 'PM' && hour !== 12) hour += 12;
+      if (period === 'AM' && hour === 12) hour = 0;
+
+      if (!period) {
+        if (hour < 10 || hour >= 17) hour += 12;
+      }
+
+      return hour * 60 + minute;
+    };
+
+    let start = to24HourMinutes(startStr);
+    let end = to24HourMinutes(endStr);
+
+    if (end < start) end += 24 * 60;
+
+    return (end - start) / 60;
   }
+
+  updateTotalHours(emp: string) {
+    let total = 0;
+    this.days.forEach(day => {
+      const shift = this.schedule[emp][day];
+      total += this.calculateShiftHours(shift as string);
+    });
+    this.schedule[emp].totalHours = total;
+    this.updateTotalHoursAllEmployees();
+  }
+
+  updateTotalHoursAllEmployees() {
+    this.TotalHours = this.employees.reduce(
+      (sum, emp) => sum + (this.schedule[emp]?.totalHours || 0),
+      0
+    );
+    this.TotalSalary = this.TotalHours * this.hourlyRate;
+  }
+
+
+  private async saveScheduleToDB(showAlert: boolean = false) {
+    if (!this.storeId) return;
+
+    const weekId = this.getWeekId();
+    const payload = {
+      employees: this.employees,
+      schedule: this.schedule,
+      hourlyRate: this.hourlyRate,
+      totalHours: this.TotalHours,
+      totalSalary: this.TotalSalary,
+      savedAt: new Date().toISOString(),
+      weekId
+    };
+
+    try {
+      await this.scheduleService.saveWeeklySchedule(this.storeId, weekId, payload);
+      if (showAlert) alert('Schedule saved to database!');
+    } catch (err: any) {
+      console.error('Error saving schedule:', err);
+      if (showAlert) alert('Error saving schedule: ' + (err.message || err));
+    }
+  }
+
+  private async getWeeklySchedule() {
+    if (!this.storeId) return;
+
+    const weekId = this.getWeekId();
+    try {
+      const savedData = await this.scheduleService.getWeeklySchedule(this.storeId, weekId);
+      if (savedData) {
+        this.employees = savedData['employees'] || [];
+        this.schedule = savedData['schedule'] || {};
+        this.hourlyRate = savedData['hourlyRate'] || 15;
+      }
+    } catch (err) {
+      console.error('Error fetching weekly schedule:', err);
+    }
+  }
+
+  private initializeScheduleDefaults() {
+    this.employees.forEach(emp => {
+      if (!this.schedule[emp]) this.schedule[emp] = { totalHours: 0 };
+      this.days.forEach(day => {
+        if (!this.schedule[emp][day]) this.schedule[emp][day] = '';
+      });
+      if (!this.schedule[emp].totalHours) this.schedule[emp].totalHours = 0;
+    });
+  }
+
+
+  getWeekId(): string {
+    const now = new Date();
+    const day = now.getDay(); 
+    const diffToMon = (day + 6) % 7;
+    const mon = new Date(now);
+    mon.setDate(now.getDate() - diffToMon);
+    return mon.toISOString().split('T')[0];
+  }
+
 }
