@@ -1,7 +1,7 @@
 <app-nav-bar></app-nav-bar>
 
 
-<div class="container">
+<div class="parent-container">
 
   <h1>WEEKLY SCHEDULE</h1>
 
@@ -73,7 +73,7 @@
 
         <div class="d-flex justify-content-between w-100 addemployee">
           <input #newRate type="text" class="floating-input" placeholder="Update Hourly Rate">
-          <button class="add-btn" (click)="updateHourlyRate(newRate.value)">Update Rate</button>
+          <button class="add-btn" (click)="updateHourlyRate(newRate)">Update Rate</button>
         </div>
     </div>
     </div>
