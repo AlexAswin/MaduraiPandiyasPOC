@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData, doc, deleteDoc, getDocs, query, where, updateDoc, arrayRemove, setDoc, arrayUnion } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShipmentService {
+
+  private shipments$ = new BehaviorSubject<any[]>([]);
+  shipmentsObservable = this.shipments$.asObservable();
 
   constructor(private firestore: Firestore) { }
 
@@ -65,6 +68,15 @@ export class ShipmentService {
     const colRef = collection(this.firestore, user); 
     return collectionData(colRef, { idField: 'id' }); 
   }
+
+
+setShipments(data: any[]) {
+  this.shipments$.next([...data]);
+}
+
+getShipments() {
+  return [...this.shipments$.value];
+}
 
   getAllItemsDetails(Items: string): Observable<any[]> {
     
