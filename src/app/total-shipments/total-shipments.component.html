@@ -167,6 +167,9 @@
     
         </div>
       </div>
+      <div class="downloadBtn" *ngIf="totalDispatchedItems?.length">
+        <button (click)="downloadPDF()">Download Details</button>
+      </div>
     </div>
     <div class="tab-pane fade" id="profile" role="tabpanel">
       <div class="container mt-4">
@@ -213,8 +216,4 @@
     </div>
   
   </div>
-</div>
-
-<div class="downloadBtn" *ngIf="totalDispatchedItems?.length">
-  <button (click)="downloadPDF()">Download Details</button>
 </div>
