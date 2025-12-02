@@ -276,6 +276,15 @@ button {
 
 .tab-pane {
   animation: fadeIn 0.3s ease-in;
+
+  h1 {
+    transition: background-color 0.5s ease;
+  }
+}
+
+.text-muted {
+  text-align: center;
+  margin-top: 50px;
 }
 
 @keyframes fadeIn {

@@ -24,11 +24,15 @@ export class TotalShipmentsComponent implements OnInit {
   dispatchedFromMaduraiPandiyasElite: any[] | null = [];
 
   totalDispatchedItems?: any[] | null = [];
+  originalDispatchedItems?: any[] | null = [];
   filteredShipments?: any[] = [];
 
   MaduraiPandiyas: boolean = false;
   MaduraiPandiyasElite: boolean = false;
-  confirmDeleteItem: boolean = false
+  confirmDeleteItem: boolean = false;
+
+  shipmentFrom: string = 'Madurai Pandiyas';
+  shipmentTo: string = 'Madurai Pandiyas Elite'
 
   AddProductDetails: boolean = false;
   updatePriceEle: boolean = false;
@@ -36,8 +40,8 @@ export class TotalShipmentsComponent implements OnInit {
   storeChange: boolean = false;
   activeStore: string = 'Madurai Pandiyas'
 
-  locations = ['Total Shipments', 'Madurai Pandiyas', 'Madurai Pandiyas Elite'];
-  fromStoreControl = new FormControl('Total Shipments');
+  locations = ['Madurai Pandiyas', 'Madurai Pandiyas Elite'];
+  fromStoreControl = new FormControl('Madurai Pandiyas');
   startDateControl = new FormControl('');
   endDateControl = new FormControl('');
   updateUnitPrice = new FormControl('');
@@ -67,44 +71,99 @@ export class TotalShipmentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllShipments();
+    // this.getAllShipments();
+    this.getShipmentDetails('Madurai Pandiyas');
     this.getAllItems();
     this.getPurchaseList();
   }
 
-  getAllShipments = () => {
-    const maduraiPandiyas = 'Madurai Pandiyas';
-    const maduraiPandiyasElite = 'Madurai Pandiyas Elite';
-  
-    combineLatest([
-      this.shipmentService.getAllShipmentDetails(maduraiPandiyas),
-      this.shipmentService.getAllShipmentDetails(maduraiPandiyasElite),
-    ]).subscribe(
-      ([resMadurai, resElite]) => {
+  getShipmentDetails = (shipmentFrom: string) => {
+
+  const { monday, sunday } = this.getCurrentWeekRange();
+
+  this.shipmentService.getAllShipmentDetails(shipmentFrom)
+    .subscribe(
+      (resMadurai) => {
+
         this.dispatchedFromMaduraiPandiyas = Array.isArray(resMadurai)
           ? resMadurai
           : Object.values(resMadurai ?? []);
-  
-        this.dispatchedFromMaduraiPandiyasElite = Array.isArray(resElite)
-          ? resElite
-          : Object.values(resElite ?? []);
-  
-        this.totalDispatchedItems = [
-          ...(this.dispatchedFromMaduraiPandiyas ?? []),
-          ...(this.dispatchedFromMaduraiPandiyasElite ?? []),
-        ];
-  
+
+          const thisWeekItems = this.dispatchedFromMaduraiPandiyas.filter((item: any) => {
+            const date = new Date(item.DispatchedTime);
+            return date >= monday && date <= sunday;
+          });  
+
+        
+        this.shipmentService.setShipments(this.dispatchedFromMaduraiPandiyas);
+        this.totalDispatchedItems = [...thisWeekItems];
+
         this.totalDispatchedItems.sort((a: any, b: any) => {
           return new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime();
         });
-  
-        console.log('Sorted dispatched items:', this.totalDispatchedItems);
+
+        console.log('Sorted dispatched items (Madurai Pandiyas):', this.totalDispatchedItems);
       },
       (error) => {
         console.error('Error fetching shipments:', error);
       }
     );
-  };
+
+  }
+
+  getCurrentWeekRange() {
+    const today = new Date();
+    const day = today.getDay(); // 0 = Sun, 1 = Mon
+  
+    // Convert Sunday (0) to 6 for Monday-start week
+    const diffToMonday = (day === 0 ? 6 : day - 1);
+  
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - diffToMonday);
+    monday.setHours(0, 0, 0, 0);
+  
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+  
+    return { monday, sunday };
+  }
+  
+
+
+  // getAllShipments = () => {
+  //   const maduraiPandiyas = 'Madurai Pandiyas';
+  //   const maduraiPandiyasElite = 'Madurai Pandiyas Elite';
+  
+  //   combineLatest([
+  //     this.shipmentService.getAllShipmentDetails(maduraiPandiyas),
+  //     this.shipmentService.getAllShipmentDetails(maduraiPandiyasElite),
+  //   ]).subscribe(
+  //     ([resMadurai, resElite]) => {
+  //       this.dispatchedFromMaduraiPandiyas = Array.isArray(resMadurai)
+  //         ? resMadurai
+  //         : Object.values(resMadurai ?? []);
+  
+  //       this.dispatchedFromMaduraiPandiyasElite = Array.isArray(resElite)
+  //         ? resElite
+  //         : Object.values(resElite ?? []);
+  
+  //       this.totalDispatchedItems = [
+  //         ...(this.dispatchedFromMaduraiPandiyas ?? []),
+  //         ...(this.dispatchedFromMaduraiPandiyasElite ?? []),
+  //       ];
+  
+  //       this.totalDispatchedItems.sort((a: any, b: any) => {
+  //         return new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime();
+  //       });
+  
+  //       console.log('Sorted dispatched items:', this.totalDispatchedItems);
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching shipments:', error);
+  //     }
+  //   );
+  // };
   
 
   getAllItems = () => {
@@ -123,17 +182,13 @@ export class TotalShipmentsComponent implements OnInit {
     const storeName = event.target as HTMLSelectElement;
 
     if (storeName.value === 'Madurai Pandiyas') {
-      this.MaduraiPandiyas = true;
-      this.MaduraiPandiyasElite = false;
-      this.totalDispatchedItems = this.dispatchedFromMaduraiPandiyas;
+      this.shipmentFrom = 'Madurai Pandiyas'
+      this.shipmentTo = 'Madurai Pandiyas Elite'
+      this.getShipmentDetails('Madurai Pandiyas');
     } else if (storeName.value === 'Madurai Pandiyas Elite') {
-      this.MaduraiPandiyasElite = true;
-      this.MaduraiPandiyas = false;
-      this.totalDispatchedItems = this.dispatchedFromMaduraiPandiyasElite;
-    } else {
-      this.MaduraiPandiyasElite = false;
-      this.MaduraiPandiyas = false;
-      this.getTotalDispatchedItems();
+      this.shipmentFrom = 'Madurai Pandiyas Elite'
+      this.shipmentTo = 'Madurai Pandiyas'
+      this.getShipmentDetails('Madurai Pandiyas Elite');
     }
   }
 
@@ -145,49 +200,43 @@ export class TotalShipmentsComponent implements OnInit {
   }
 
   applyFilters = () => {
-   
 
-    let filterItems: any[] = [];
-
-    if (this.MaduraiPandiyas) {
-      filterItems = this.dispatchedFromMaduraiPandiyas ?? [];
-    } else if (this.MaduraiPandiyasElite) {
-      filterItems = this.dispatchedFromMaduraiPandiyasElite ?? [];
-    } else {
-      filterItems = this.totalDispatchedItems ?? [];
-    }
+      // Always filter from the already loaded store data
+      const filterItems = this.shipmentService.getShipments();
     
-    const startDateEle = document.getElementById('startDate') as HTMLInputElement | null;
-    const endDateEle = document.getElementById('endDate') as HTMLInputElement | null;
-  
-    if (!startDateEle?.value && !endDateEle?.value) {
-      this.filteredShipments = [];
-      return;
-    }
-  
-    const startDate = startDateEle?.value
-      ? new Date(startDateEle.value + 'T00:00:00')
-      : null;
-    const endDate = endDateEle?.value
-      ? new Date(endDateEle.value + 'T23:59:59')
-      : null;
-  
-    this.filteredShipments = (filterItems ?? [])
-      .filter((item: any) => {
-        const dispatchedDate = new Date(item.DispatchedTime);
-  
-        const matchStart = !startDate || dispatchedDate >= startDate;
-        const matchEnd = !endDate || dispatchedDate <= endDate;
-  
-        return matchStart && matchEnd;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.DispatchedTime).getTime() -
-          new Date(a.DispatchedTime).getTime()
-      );
-
-    this.totalDispatchedItems = this.filteredShipments;
+      const startDateEle = document.getElementById('startDate') as HTMLInputElement | null;
+      const endDateEle = document.getElementById('endDate') as HTMLInputElement | null;
+    
+      if (!startDateEle?.value && !endDateEle?.value) {
+        this.filteredShipments = [];
+        return;
+      }
+    
+      const startDate = startDateEle?.value
+        ? new Date(startDateEle.value + 'T00:00:00')
+        : null;
+    
+      const endDate = endDateEle?.value
+        ? new Date(endDateEle.value + 'T23:59:59')
+        : null;
+    
+      this.filteredShipments = filterItems
+        .filter((item: any) => {
+    
+          const dispatchedDate = new Date(item.DispatchedTime);
+    
+          const matchStart = !startDate || dispatchedDate >= startDate;
+          const matchEnd = !endDate || dispatchedDate <= endDate;
+    
+          return matchStart && matchEnd;
+        })
+        .sort(
+          (a, b) =>
+            new Date(b.DispatchedTime).getTime() -
+            new Date(a.DispatchedTime).getTime()
+        );
+    
+      this.totalDispatchedItems = this.filteredShipments;    
   };
   
 deleteShipment = (dispatchedItems: any) => {
