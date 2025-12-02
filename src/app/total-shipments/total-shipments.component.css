@@ -140,10 +140,6 @@ button {
         }
         select {
           min-height: 50px;
-
-          .selectOptions {
-              /* width: 30%; */
-          }
         }
       }
 
@@ -195,9 +191,6 @@ button {
       align-items: center;
       gap: 20px 0px;
 
-      h3 {
-
-      }
       .dispatch-group {
         width: 100%;
         display: flex;
@@ -223,9 +216,6 @@ button {
   .offcanvas {
 
     overflow-y: auto;
-    .offcanvas-header {
-
-    }
     .offcanvas-body {
       flex-direction: column;
       overflow-y: visible;

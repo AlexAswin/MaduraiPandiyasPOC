@@ -1,4 +1,4 @@
-<!-- <app-nav-bar></app-nav-bar> -->
+<app-nav-bar></app-nav-bar>
 
 <div class="container mt-4">
     <h2>Employee Time Sheet</h2>
@@ -31,9 +31,6 @@
                             <button class="btn btn-sm btn-danger ms-2" (click)="deleteEmployee(i)">
                                 <i class="bi bi-x-lg"></i>
                             </button>
-                            <button class="btn btn-sm btn-primary ms-2" (click)="downloadEmployeePDF(emp)">
-                                <i class="bi bi-download"></i>
-                              </button>
                         </div>
                     </td>
 
@@ -47,12 +44,32 @@
         </table>
     </div>
 
-    <div class="mb-3 mt-5 d-flex justify-content-between">
-        <input type="text" class="add-employee" placeholder="Enter Employee Name" [(ngModel)]="newEmployeeName">
-        <button class="reset-btn" (click)="addEmployee()">Add Employee</button>
+    <div class="employee-actions-container">
+        <div class="employee-left">
+            <div class="d-flex justify-content-between">
+                <input type="text" class="add-employee" placeholder="Enter Employee Name" [(ngModel)]="newEmployeeName">
+                <button class="btn reset-btn" (click)="addEmployee()">Add Employee</button>
+            </div>
+            <div class="d-flex justify-content-between">
+                <input #newRate type="text" class="add-employee mt-2" placeholder="Update Hourly Rate">
+                <button class="btn reset-btn" (click)="updateHourlyRate(newRate)">Update Rate</button>
+            </div>
 
-        <input #newRate type="text" class="add-employee" placeholder="Update Hourly Rate">
-        <button class="reset-btn" (click)="updateHourlyRate(newRate)">Update Rate</button>
-    </div>
+        </div>
+      
+        <div class="employee-right">
+          <select class="form-select" [(ngModel)]="selectedEmployee">
+            <option [ngValue]="null" disabled>Select Employee</option>
+            <option *ngFor="let emp of employees" [ngValue]="emp">
+              {{ emp.name }}
+            </option>
+          </select>
+          <button class="btn mt-2" (click)="downloadEmployeePDF(selectedEmployee)">
+            Download PDF <i class="bi bi-download"></i>
+          </button>
+        </div>
+      </div>
+      
+      
 
 </div>
