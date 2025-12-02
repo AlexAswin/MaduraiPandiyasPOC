@@ -116,6 +116,48 @@
       padding: 0.25rem 0.5rem;
       font-size: 0.75rem;
     }
+
+    .logOutBtn {
+      display: none;
+    }
+    .reset-btn {
+      width: 100%;
+      min-height: 50px;
+    }
+    .employee-actions-container {
+      flex-direction: column; /* stack vertically */
+      align-items: stretch;
+      gap: 40px 0px;
+
+      .downloadBtn {
+        width: 100%;
+      }
+    }
+  
+    .employee-left,
+    .employee-right {
+      min-width: 100%; /* full width */
+      padding: 5px;
+    }
+  
+    .employee-left input,
+    .employee-right input,
+    .employee-left select,
+    .employee-right select {
+      min-width: 50%;
+    }
+  
+    .employee-left button,
+    .employee-right button {
+      /* min-width: 100%;
+      max-width: 35%; */
+    }
+
+    
+  
+    .employee-actions-container .divider {
+      display: none; /* hide vertical line on mobile */
+    }
   }
   
   /* Tablet view */
