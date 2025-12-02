@@ -17,7 +17,7 @@ interface Employee {
 @Component({
   selector: 'app-time-sheet',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, NavBarComponent, RouterModule ],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule, NavBarComponent ],
   templateUrl: './time-sheet.component.html',
   styleUrl: './time-sheet.component.css'
 })
@@ -27,6 +27,7 @@ export class TimeSheetComponent implements OnInit{
   employees: Employee[] = [];
   days: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   newEmployeeName: string = '';
+  selectedEmployee: Employee | null = null;
 
   hourlyRate: number = 15;
   totalAllHours = 0;
@@ -134,7 +135,7 @@ export class TimeSheetComponent implements OnInit{
 
   getThisWeekRange() {
     const today = new Date();
-    const day = today.getDay() || 7; // Sunday=7
+    const day = today.getDay() || 7;
     const start = new Date(today);
     start.setDate(today.getDate() - day + 1);
     start.setHours(0,0,0,0);
@@ -147,7 +148,13 @@ export class TimeSheetComponent implements OnInit{
     this.dateTo = end.toISOString().slice(0,10);
   }
 
-  downloadEmployeePDF(emp: Employee) {
+  downloadEmployeePDF(emp: Employee | null) {
+
+    if (!emp) {
+      alert("Please select an employee");
+      return;
+    }
+
     const doc = new jsPDF();
     let currentY = 15;
   
