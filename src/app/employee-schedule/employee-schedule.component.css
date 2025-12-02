@@ -9,6 +9,7 @@
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  margin-top: 20px;
   font-weight: 700;
 }
 
@@ -42,10 +43,29 @@ h1 {
 .save-btn {
   background-color: #28a745;
   color: white;
+  margin-left: 20px;
 }
 
 .save-btn:hover {
   background-color: #218838;
+}
+
+.logOutBtn {
+  width: 50px;            
+  height: 50px;
+  border-radius: 50%;     
+  display: flex;          
+  align-items: center;    
+  justify-content: center; 
+  border: none;
+  cursor: pointer;
+  font-size: 24px;  
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.logOutBtn:hover {
+  background-color: #e7e7e7;
+  transform: scale(1.1);
 }
 
 /* ---------------- Table Container ---------------- */
@@ -82,6 +102,7 @@ h1 {
   position: sticky;
   top: 0;
   z-index: 20;
+  min-width: 125px;
 }
 
 /* Employee Column Header Sticky */
@@ -252,6 +273,10 @@ h5 {
     flex-direction: column;
   }
 
+  .logOutBtn {
+    display: none;
+  }
+
   .employee-input-container,
   .shift-input-container {
     width: 100%;
@@ -275,6 +300,16 @@ h5 {
   .schedule-table th.emp-head {
     min-width: 100px;
   }
+
+  .save-btn {
+    margin-left: 0px;
+    margin-top: 20px;
+    min-height: 50px;
+  }
+
+  .reset-btn {
+    min-height: 50px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -283,11 +318,34 @@ h5 {
     gap: 10px;
   }
 
+  .logOutBtn {
+    display: none;
+  }
+
+  .save-btn {
+    margin-left: 0px;
+  }
+
   .schedule-btn {
     width: 100%;
   }
 
   .addemployee {
     flex-direction: column;
+    gap: 10px 0px;
+  }
+
+  .save-btn {
+    margin-left: 0px;
+    margin-top: 20px;
+    min-height: 50px;
+  }
+
+  .reset-btn {
+    min-height: 50px;
+  }
+
+  .add-btn {
+    min-height: 50px;
   }
 }

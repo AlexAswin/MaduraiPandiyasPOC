@@ -6,8 +6,14 @@
   <h1>WEEKLY SCHEDULE</h1>
 
   <div class="schedule-actions">
-    <button class="schedule-btn reset-btn" (click)="resetSchedule()">Reset Schedule</button>
-    <button class="schedule-btn save-btn" (click)="saveSchedule()">Save Schedule</button>
+    <div>
+      <button class="logOutBtn" [routerLink]="['/shipment']"><i class="bi bi-arrow-left-circle"></i></button>
+    </div>
+    <div>
+      <button class="schedule-btn reset-btn" (click)="resetSchedule()">Reset Schedule</button>
+      <button class="schedule-btn save-btn" (click)="saveSchedule()">Save Schedule</button>
+    </div>
+    
   </div>
 
   <div class="table-responsive schedule-table-container">

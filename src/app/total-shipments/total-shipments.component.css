@@ -70,7 +70,7 @@ button {
     padding: 35px 0px;
 
     .card {
-      width: 49%;
+      width: 100%;
       .card-header {
         display: flex;
         justify-content: space-between;
