@@ -73,15 +73,13 @@ body {
         align-items: center;
         gap: 10px;
 
-        .selectItemcontainer {
-          min-width: 35%;
-        }
         input {
           /* flex: 1; */
           border-radius: 8px;
           border: 1px solid #ccc;
           padding: 8px 12px;
           font-size: 15px;
+          /* min-height: 60px; */
   
           &:focus {
             border-color: #28a745;
@@ -102,6 +100,9 @@ body {
       
       }}
     
+}
+.selectItemcontainer {
+  min-width: 35%;
 }
 .button-container{
         display: flex;
@@ -158,25 +159,36 @@ body {
       .location-select-group {
         flex-direction: column;
         .form-group {
-          /* flex: 1; */
           min-width: 100%;
           flex-direction: column;
+
+          select {
+            min-height: 60px;
+          }
         }
       }
       .form-group.d-flex {
         flex-direction: column;
+        
           .form-group {
             min-width: 100%;
+            select {
+              min-height: 60px;
+            }
 
             input {
-              margin-right: 0px
+              margin-right: 0px;
+              min-height: 60px;
             }
           }
-          button {
-            min-width: 100%;
+        
+          input {
+            min-height: 60px;
           }
       }
+      
     }
+    
 .logoutBtnContainer {
   display: flex;
   align-items: center;
@@ -187,6 +199,12 @@ body {
     margin: 40px auto;
   }
 }
+.selectItemcontainer {
+  min-width: 100%;
+  select {
+    min-height: 60px;
+  }
+}
 
-  } 
+} 
   

@@ -134,7 +134,7 @@
       <div class="shipmentContainer" id="shipmentContainer" *ngIf="totalDispatchedItems!.length > 0; else noData">
         <div class="card mb-3 p-3 shadow-sm" *ngFor="let DispatchedItems of totalDispatchedItems; let i = index">
           <div class="card-header">
-            <h5>Shipment {{ i + 1 }}</h5>
+            <h5>Shipment On {{ DispatchedItems.DispatchedTime }}</h5>
             <button (click)="deleteShipment(DispatchedItems)"><i class="bi bi-x-square-fill"></i></button>
           </div>
           <div class="card-body">
