@@ -23,4 +23,16 @@ export class ScheduleService {
       return null;
     }
   }
+
+
+  saveTimeSheet(storeId: string, weekId: string, employees: any[], hourlyRate: number, dateFrom: string, dateTo: string) {
+    const ref = doc(this.firestore, `stores/${storeId}/timeSheets/${weekId}`);
+    return setDoc(ref, { employees, hourlyRate, dateFrom, dateTo }, { merge: true });
+  }
+
+  async getTimeSheet(storeId: string, weekId: string) {
+    const ref = doc(this.firestore, `stores/${storeId}/timeSheets/${weekId}`);
+    const snap = await getDoc(ref);
+    return snap.exists() ? snap.data() : null;
+  }
 }

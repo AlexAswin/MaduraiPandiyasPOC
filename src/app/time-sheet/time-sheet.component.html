@@ -31,15 +31,17 @@
                             <button class="btn btn-sm btn-danger ms-2" (click)="deleteEmployee(i)">
                                 <i class="bi bi-x-lg"></i>
                             </button>
+                            <button class="btn btn-sm btn-primary ms-2" (click)="downloadEmployeePDF(emp)">
+                                <i class="bi bi-download"></i>
+                              </button>
                         </div>
                     </td>
 
                     <td *ngFor="let day of days; let d = index">
-                        <input type="number" min="0" class="form-control" [(ngModel)]="emp.dailyHours[d]"
-                            (input)="updateShift()">
-                    </td>
+                        <input type="number" min="0" class="form-control" [(ngModel)]="emp.dailyHours[d]" (input)="updateShift()">
+                      </td>
 
-                    <td>{{ getTotalHours(emp) }}</td>
+                    <td>{{ getEmployeeTotal(emp) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -50,7 +52,7 @@
         <button class="reset-btn" (click)="addEmployee()">Add Employee</button>
 
         <input #newRate type="text" class="add-employee" placeholder="Update Hourly Rate">
-        <button class="reset-btn" (click)="updateHourlyRate(newRate.value)">Update Rate</button>
+        <button class="reset-btn" (click)="updateHourlyRate(newRate)">Update Rate</button>
     </div>
 
 </div>
