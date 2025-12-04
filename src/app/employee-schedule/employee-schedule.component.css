@@ -1,7 +1,7 @@
 /* ---------------- Container ---------------- */
 .parent-container {
   margin: 0 auto;
-  padding: 0px 20px;
+  padding: 30px 20px;
   font-family: 'Inter', sans-serif;
 }
 
@@ -348,5 +348,12 @@ h5 {
 
   .add-btn {
     min-height: 50px;
+  }
+
+  .downloadBtn {
+    button {
+      width: 100%;
+    }
+
   }
 }

@@ -37,7 +37,7 @@ export class ShipmentsComponent {
   itemsRequest = new FormControl('');
   reqItems: string[] = [];
 
-  units = ['Kg', 'Ltr', 'Nos', 'Tray'];
+  units = ['Kg', 'Ltr', 'Nos', 'Tray', 'Portions'];
   ItemsInformation: { itemName: string; unitPrice: number }[] = [];
 
   showSnackbar = false;
