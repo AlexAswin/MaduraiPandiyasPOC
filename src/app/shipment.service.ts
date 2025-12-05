@@ -16,19 +16,14 @@ export class ShipmentService {
     try {
       const orderCollection = collection(this.firestore, shipmentFrom);
   
-      // Extract only the date part from DispatchedTime (YYYY-MM-DD)
-      const dispatchedDate = new Date(dispatchedItemDetails.DispatchedTime)
-                                .toDateString();
+      const dispatchedDate = dispatchedItemDetails.DispatchedDate;
   
-      // Step 1: Query for documents with the SAME date
       const q = query(
         orderCollection,
         where("DispatchedDate", "==", dispatchedDate)
       );
-  
+      
       const result = await getDocs(q);
-  
-      // Step 2: If a document with same date exists → update it
       if (!result.empty) {
         const existingDoc = result.docs[0];
   
@@ -51,8 +46,7 @@ export class ShipmentService {
   
       // Step 3: If no document exists → create a new one
       const newDocRef = await addDoc(orderCollection, {
-        ...dispatchedItemDetails,
-        DispatchedDate: dispatchedDate
+        ...dispatchedItemDetails
       });
   
       return newDocRef.id;

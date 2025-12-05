@@ -27,12 +27,14 @@ export class RequestComponent implements OnInit {
     const User = localStorage.getItem('UserId');
   
     this.shipmentService.getAllShipmentDetails(User!).subscribe((res: any[]) => {
-      this.DispatchedItemsList = res.sort(
-        (a, b) => new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime()
-      );
+      this.DispatchedItemsList = res
+        .filter(item => item.DispatchedDate)
+        .sort((a, b) => b.DispatchedDate.localeCompare(a.DispatchedDate));
+  
       console.log(this.DispatchedItemsList);
     });
   };
+  
   
 
 }
