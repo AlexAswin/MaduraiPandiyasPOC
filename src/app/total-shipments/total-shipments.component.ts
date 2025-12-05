@@ -71,51 +71,48 @@ export class TotalShipmentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getAllShipments();
     this.getShipmentDetails('Madurai Pandiyas');
     this.getAllItems();
     this.getPurchaseList();
   }
 
   getShipmentDetails = (shipmentFrom: string) => {
-
-  const { monday, sunday } = this.getCurrentWeekRange();
-
-  this.shipmentService.getAllShipmentDetails(shipmentFrom)
-    .subscribe(
+    const { monday, sunday } = this.getCurrentWeekRange();
+  
+    const mondayStr = monday.toISOString().split('T')[0];
+    const sundayStr = sunday.toISOString().split('T')[0];
+  
+    this.shipmentService.getAllShipmentDetails(shipmentFrom).subscribe(
       (resMadurai) => {
-
         this.dispatchedFromMaduraiPandiyas = Array.isArray(resMadurai)
           ? resMadurai
           : Object.values(resMadurai ?? []);
-
-          const thisWeekItems = this.dispatchedFromMaduraiPandiyas.filter((item: any) => {
-            const date = new Date(item.DispatchedTime);
-            return date >= monday && date <= sunday;
-          });  
-
-        
-        this.shipmentService.setShipments(this.dispatchedFromMaduraiPandiyas);
-        this.totalDispatchedItems = [...thisWeekItems];
-
-        this.totalDispatchedItems.sort((a: any, b: any) => {
-          return new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime();
+  
+        const thisWeekItems = this.dispatchedFromMaduraiPandiyas.filter((item: any) => {
+          if (!item.DispatchedDate) return false;
+          return item.DispatchedDate >= mondayStr && item.DispatchedDate <= sundayStr;
         });
-
+  
+        this.shipmentService.setShipments(this.dispatchedFromMaduraiPandiyas);
+  
+        this.totalDispatchedItems = [...thisWeekItems].sort((a: any, b: any) => {
+          return b.DispatchedDate.localeCompare(a.DispatchedDate);
+        });
+  
         console.log('Sorted dispatched items (Madurai Pandiyas):', this.totalDispatchedItems);
       },
       (error) => {
         console.error('Error fetching shipments:', error);
       }
     );
-
   }
+  
 
   getCurrentWeekRange() {
     const today = new Date();
-    const day = today.getDay(); // 0 = Sun, 1 = Mon
+    const day = today.getDay();
   
-    // Convert Sunday (0) to 6 for Monday-start week
+  
     const diffToMonday = (day === 0 ? 6 : day - 1);
   
     const monday = new Date(today);
@@ -129,43 +126,6 @@ export class TotalShipmentsComponent implements OnInit {
     return { monday, sunday };
   }
   
-
-
-  // getAllShipments = () => {
-  //   const maduraiPandiyas = 'Madurai Pandiyas';
-  //   const maduraiPandiyasElite = 'Madurai Pandiyas Elite';
-  
-  //   combineLatest([
-  //     this.shipmentService.getAllShipmentDetails(maduraiPandiyas),
-  //     this.shipmentService.getAllShipmentDetails(maduraiPandiyasElite),
-  //   ]).subscribe(
-  //     ([resMadurai, resElite]) => {
-  //       this.dispatchedFromMaduraiPandiyas = Array.isArray(resMadurai)
-  //         ? resMadurai
-  //         : Object.values(resMadurai ?? []);
-  
-  //       this.dispatchedFromMaduraiPandiyasElite = Array.isArray(resElite)
-  //         ? resElite
-  //         : Object.values(resElite ?? []);
-  
-  //       this.totalDispatchedItems = [
-  //         ...(this.dispatchedFromMaduraiPandiyas ?? []),
-  //         ...(this.dispatchedFromMaduraiPandiyasElite ?? []),
-  //       ];
-  
-  //       this.totalDispatchedItems.sort((a: any, b: any) => {
-  //         return new Date(b.DispatchedTime).getTime() - new Date(a.DispatchedTime).getTime();
-  //       });
-  
-  //       console.log('Sorted dispatched items:', this.totalDispatchedItems);
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching shipments:', error);
-  //     }
-  //   );
-  // };
-  
-
   getAllItems = () => {
       this.shipmentService.getAllItemsDetails('Items').subscribe(res => {
         this.allItems = res.map(item => ({
@@ -201,43 +161,34 @@ export class TotalShipmentsComponent implements OnInit {
 
   applyFilters = () => {
 
-      // Always filter from the already loaded store data
-      const filterItems = this.shipmentService.getShipments();
-    
-      const startDateEle = document.getElementById('startDate') as HTMLInputElement | null;
-      const endDateEle = document.getElementById('endDate') as HTMLInputElement | null;
-    
-      if (!startDateEle?.value && !endDateEle?.value) {
-        this.filteredShipments = [];
-        return;
-      }
-    
-      const startDate = startDateEle?.value
-        ? new Date(startDateEle.value + 'T00:00:00')
-        : null;
-    
-      const endDate = endDateEle?.value
-        ? new Date(endDateEle.value + 'T23:59:59')
-        : null;
-    
-      this.filteredShipments = filterItems
-        .filter((item: any) => {
-    
-          const dispatchedDate = new Date(item.DispatchedTime);
-    
-          const matchStart = !startDate || dispatchedDate >= startDate;
-          const matchEnd = !endDate || dispatchedDate <= endDate;
-    
-          return matchStart && matchEnd;
-        })
-        .sort(
-          (a, b) =>
-            new Date(b.DispatchedTime).getTime() -
-            new Date(a.DispatchedTime).getTime()
-        );
-    
-      this.totalDispatchedItems = this.filteredShipments;    
+    const filterItems = this.shipmentService.getShipments();
+  
+    const startDateEle = document.getElementById('startDate') as HTMLInputElement | null;
+    const endDateEle = document.getElementById('endDate') as HTMLInputElement | null;
+  
+    if (!startDateEle?.value && !endDateEle?.value) {
+      this.filteredShipments = [];
+      this.totalDispatchedItems = [];
+      return;
+    }
+  
+    const startDateStr = startDateEle?.value || null;
+    const endDateStr = endDateEle?.value || null;
+  
+    this.filteredShipments = filterItems
+      .filter((item: any) => {
+        if (!item.DispatchedDate) return false;
+  
+        const matchStart = !startDateStr || item.DispatchedDate >= startDateStr;
+        const matchEnd = !endDateStr || item.DispatchedDate <= endDateStr;
+  
+        return matchStart && matchEnd;
+      })
+      .sort((a, b) => b.DispatchedDate.localeCompare(a.DispatchedDate));
+  
+    this.totalDispatchedItems = this.filteredShipments;
   };
+  
   
 deleteShipment = (dispatchedItems: any) => {
   console.log(dispatchedItems)
@@ -332,7 +283,6 @@ downloadPDF() {
   img.src = 'assets/Logo/MaduraiPandiyas.jpeg';
 
   img.onload = () => {
-
     doc.addImage(img, 'JPEG', 155, 10, 40, 30);
 
     doc.setFontSize(16);
@@ -355,60 +305,60 @@ downloadPDF() {
 
     const groupedByDate: { [key: string]: { items: any[]; total: number } } = {};
 
-this.totalDispatchedItems.forEach((shipment: any) => {
-  const date = new Date(shipment.DispatchedTime).toLocaleDateString('en-CA');
+    this.totalDispatchedItems.forEach((shipment: any) => {
+      const date = shipment.DispatchedDate;
 
-  if (!groupedByDate[date]) {
-    groupedByDate[date] = { items: [], total: 0 };
-  }
+      if (!groupedByDate[date]) {
+        groupedByDate[date] = { items: [], total: 0 };
+      }
 
-  shipment.shipmentItemsDetails?.forEach((item: any) => {
-    const totalPrice = item.totalPrice;
-    groupedByDate[date].items.push({
-      itemName: item.itemName,
-      quantity: `${item.quantity}${item.unit || ''}`,
-      unitPrice: item.unitPrice,
-      totalPrice: totalPrice,
+      shipment.shipmentItemsDetails?.forEach((item: any) => {
+        groupedByDate[date].items.push({
+          itemName: item.itemName,
+          quantity: `${item.quantity}${item.unit || ''}`,
+          unitPrice: item.unitPrice,
+          totalPrice: item.totalPrice,
+        });
+        groupedByDate[date].total += item.totalPrice;
+      });
     });
 
-    groupedByDate[date].total += totalPrice;
-  });
-});
+    Object.keys(groupedByDate)
+      .sort((a, b) => b.localeCompare(a)) 
+      .forEach(date => {
+        doc.setFontSize(12);
+        doc.text(`${date}`, 14, currentY);
+        currentY += 6;
 
-Object.keys(groupedByDate)
-.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-.forEach(date => {
-  doc.setFontSize(12);
-  doc.text(`${date}`, 14, currentY);
-  currentY += 6;
+        autoTable(doc, {
+          head: [['Item', 'Quantity', 'Unit Price', 'Total Price']],
+          body: groupedByDate[date].items.map(item => [
+            item.itemName,
+            item.quantity,
+            `CAD${item.unitPrice}`,
+            `CAD${item.totalPrice}`,
+          ]),
+          foot: [['', '', 'Total', `CAD${groupedByDate[date].total.toFixed(2)}`]],
+          footStyles: { fillColor: [200, 200, 200], fontStyle: 'bold' },
+          startY: currentY,
+          margin: { left: 14, right: 14 },
+          theme: 'grid',
+          styles: { fontSize: 10, halign: 'center' },
+          headStyles: { fillColor: [22, 160, 133] },
+        });
 
-  autoTable(doc, {
-    head: [['Item', 'Quantity', 'Unit Price', 'Total Price']],
-    body: groupedByDate[date].items.map(item => [
-      item.itemName,
-      item.quantity,
-      `CAD${item.unitPrice}`,
-      `CAD${item.totalPrice}`,
-    ]),
-    foot: [['', '', 'Total', `CAD${groupedByDate[date].total.toFixed(2)}`]],
-    footStyles: { fillColor: [200, 200, 200], fontStyle: 'bold' },
-    startY: currentY,
-    margin: { left: 14, right: 14 },
-    theme: 'grid',
-    styles: { fontSize: 10, halign: 'center' },
-    headStyles: { fillColor: [22, 160, 133] },
-  });
+        currentY = (doc as any).lastAutoTable.finalY + 10;
+      });
 
-  currentY = (doc as any).lastAutoTable.finalY + 10;
-});
+    const grandTotal = Object.values(groupedByDate).reduce(
+      (sum, group) => sum + group.total,
+      0
+    );
 
-const grandTotal = Object.values(groupedByDate)
-.reduce((sum, group) => sum + group.total, 0);
+    doc.setFontSize(12);
+    doc.text(`Grand Total: CAD${grandTotal.toFixed(2)}`, 14, currentY);
 
-doc.setFontSize(12);
-doc.text(`Grand Total: CAD${grandTotal.toFixed(2)}`, 14, currentY);
-
-
+    // Footer
     doc.setFontSize(10);
     doc.text('Generated by Madurai Pandiyas', 14, 290);
 
@@ -419,6 +369,7 @@ doc.text(`Grand Total: CAD${grandTotal.toFixed(2)}`, 14, currentY);
     console.error('Logo not found! Make sure the path is correct.');
   };
 }
+
 
 PurchasedItems: { name: string, docId: string }[] = [];
 

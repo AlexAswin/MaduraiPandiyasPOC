@@ -148,7 +148,7 @@ export class ShipmentsComponent {
 
     try {
 
-      const DispatchedTime = new Date().toLocaleString();
+      const DispatchedDate = new Date().toISOString().split("T")[0];
 
       const shipmentFrom = this.shipmentDetails.get('from')?.value?.trim();
       const shipmentTo = this.shipmentDetails.get('to')?.value?.trim();
@@ -173,7 +173,7 @@ export class ShipmentsComponent {
         (sum: any, item: any) => sum + item.totalPrice,
         0
       );
-      const shipmentDetails = { shipmentItemsDetails, DispatchedTime, shipmentGrandTotal, shipmentFrom, shipmentTo };
+      const shipmentDetails = { shipmentItemsDetails, DispatchedDate, shipmentGrandTotal, shipmentFrom, shipmentTo };
       console.log(shipmentDetails);
 
       await this.shipmentService.submitShipment(shipmentDetails, shipmentFrom);

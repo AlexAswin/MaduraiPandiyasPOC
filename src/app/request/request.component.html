@@ -13,7 +13,7 @@
       <h5>Shipment {{ i + 1 }}</h5>
       <p><strong>From:</strong> {{ DispatchedItem.shipmentFrom }}</p>
       <p><strong>To:</strong> {{ DispatchedItem.shipmentTo }}</p>
-      <p><strong>Dispatched Time:</strong> {{ DispatchedItem.DispatchedTime }}</p>
+      <p><strong>Dispatched Date:</strong> {{ DispatchedItem.DispatchedDate }}</p>
 
       <div *ngIf="DispatchedItem.shipmentItemsDetails && DispatchedItem.shipmentItemsDetails.length > 0">
         <h6>Items:</h6>
