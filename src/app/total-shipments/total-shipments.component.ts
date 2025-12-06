@@ -224,7 +224,7 @@ addProduct = () => {
      unitPrice : this.addItemsForm.get('unitPrice')?.value?.trim()
   }
 
-  this.shipmentService.submitShipment(itemDate, 'Items');
+  this.shipmentService.addItem(itemDate, 'Items');
 
   this.addItemsForm.get('itemName')?.setValue('');
   this.addItemsForm.get('unitPrice')?.setValue('');

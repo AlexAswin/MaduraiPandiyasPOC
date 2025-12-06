@@ -148,6 +148,10 @@ export class TimeSheetComponent implements OnInit{
     this.dateTo = end.toISOString().slice(0,10);
   }
 
+  selectEmployee(emp: any) {
+  this.selectedEmployee = emp
+  }
+
   downloadEmployeePDF(emp: Employee | null) {
 
     if (!emp) {
