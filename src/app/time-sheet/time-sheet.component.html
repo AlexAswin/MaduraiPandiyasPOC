@@ -2,7 +2,7 @@
 
 <div class="container mb-4 mt-4">
     <h2>Employee Time Sheet</h2>
-    <div class="d-flex justify-content-between flex-column gap-5">
+    <div class="d-flex justify-content-between gap-5 topSection">
         <div><button class="logOutBtn" [routerLink]="['/shipment']"><i class="bi bi-arrow-left-circle"></i></button></div>
 
         <div class="d-flex date-range-container align-items-center">
@@ -58,18 +58,32 @@
         </div>
       
         <div class="employee-right">
-          <select class="form-select" [(ngModel)]="selectedEmployee">
-            <option [ngValue]="null" disabled>Select Employee</option>
-            <option *ngFor="let emp of employees" [ngValue]="emp">
-              {{ emp.name }}
-            </option>
-          </select>
-          <button class="btn mt-2 downloadBtn" (click)="downloadEmployeePDF(selectedEmployee)">
-            Download PDF <i class="bi bi-download"></i>
-          </button>
-        </div>
-      </div>
-      
-      
 
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle w-100"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                {{ selectedEmployee?.name || 'Select Employee' }}
+              </button>
+          
+              <ul class="dropdown-menu w-100">
+                <li *ngFor="let emp of employees">
+                  <a class="dropdown-item"
+                     (click)="selectEmployee(emp)">
+                    {{ emp.name }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          
+            <button class="btn mt-2 downloadBtn w-100"
+                    [disabled]="!selectedEmployee"
+                    (click)="downloadEmployeePDF(selectedEmployee)">
+              Download PDF <i class="bi bi-download"></i>
+            </button>
+          
+          </div>
+          
+      </div>
 </div>

@@ -60,19 +60,19 @@ export class ShipmentsComponent {
       items: this.fb.array([], Validators.required),
     });
 
-    this.shipmentDetails.get('from')?.valueChanges.subscribe((fromValue) => {
-      const toControl = this.shipmentDetails.get('to');
-      if (toControl?.value === fromValue) {
-        toControl?.setValue('', { emitEvent: false });
-      }
-    });
+    // this.shipmentDetails.get('from')?.valueChanges.subscribe((fromValue) => {
+    //   const toControl = this.shipmentDetails.get('to');
+    //   if (toControl?.value === fromValue) {
+    //     toControl?.setValue('', { emitEvent: false });
+    //   }
+    // });
 
-    this.shipmentDetails.get('to')?.valueChanges.subscribe((toValue) => {
-      const fromControl = this.shipmentDetails.get('from');
-      if (fromControl?.value === toValue) {
-        fromControl?.setValue('', { emitEvent: false });
-      }
-    });
+    // this.shipmentDetails.get('to')?.valueChanges.subscribe((toValue) => {
+    //   const fromControl = this.shipmentDetails.get('from');
+    //   if (fromControl?.value === toValue) {
+    //     fromControl?.setValue('', { emitEvent: false });
+    //   }
+    // });
 
     this.fromAndToValue();
     this.getSavedItems ();
@@ -106,7 +106,7 @@ export class ShipmentsComponent {
 
   addItem() {
     const item = this.shipmentDetails.get('message')?.value?.trim();
-    const quantity = this.shipmentDetails.get('quantity')?.value.trim();
+    const quantity = this.shipmentDetails.get('quantity')?.value;
     const Unit = this.shipmentDetails.get('unit')?.value.trim();
 
     if (item && quantity && Unit) {
@@ -126,14 +126,12 @@ export class ShipmentsComponent {
   removeItem(index: number) {
     this.items.removeAt(index);
   }
-
   
   getSavedItems() {
     const storedItem = localStorage.getItem("Saved Items");
     this.reqItems = storedItem ? JSON.parse(storedItem) : [];
   }
   
-
   triggerSnackbar(message: any) {
     this.ShowMessage = message;
     this.showSnackbar = true;

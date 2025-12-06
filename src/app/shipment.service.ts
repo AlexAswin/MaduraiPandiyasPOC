@@ -72,6 +72,18 @@ getShipments() {
   return [...this.shipments$.value];
 }
 
+async addItem(itemData: { itemName: string; unitPrice: number }, collectionName: string = 'Items') {
+  try {
+    const colRef = collection(this.firestore, collectionName);
+
+    const newDocRef = await addDoc(colRef, itemData);
+    return newDocRef.id;
+  } catch (error) {
+    console.error('Error adding item:', error);
+    throw error;
+  }
+}
+
   getAllItemsDetails(Items: string): Observable<any[]> {
     
     const colRef = collection(this.firestore, Items); 
