@@ -27,23 +27,30 @@
       background-color: #e7e7e7;
       transform: scale(1.1);
     }
-
-    .dispatch-group {
-        display: flex;
-        min-width: 36%;
-        justify-content: space-between;
-        font-family: 'Montserrat', sans-serif;
-
-        .form-group {
-            .form-control {
-                border-radius: 0px;
-            }
-        }
-    }
 }
 
 }
 
+.dispatch-group {
+  display: flex;
+  min-width: 36%;
+  justify-content: flex-end;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  gap: 40px;
+
+  h4 {
+    margin-bottom: 0px;
+  }
+
+
+  .form-group {
+    min-width: 35%;
+      .form-control {
+          border-radius: 0px;
+      }
+  }
+}
 
 .date-range-container {
     display: flex;
@@ -54,6 +61,11 @@
 
     .col-md-3 {
         display: flex;
+        justify-content: space-between;
+
+        input {
+         
+        }
     }
 }
 

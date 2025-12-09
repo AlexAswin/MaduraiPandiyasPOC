@@ -146,7 +146,7 @@ export class ShipmentsComponent {
 
     try {
 
-      const DispatchedDate = new Date().toISOString().split("T")[0];
+      const DispatchedDate = new Date().toLocaleDateString('en-CA');
 
       const shipmentFrom = this.shipmentDetails.get('from')?.value?.trim();
       const shipmentTo = this.shipmentDetails.get('to')?.value?.trim();
@@ -163,14 +163,14 @@ export class ShipmentsComponent {
         quantity: item.quantity,
         unit: item.unit,
         unitPrice: priceMap.get(item.name)!,
-        totalPrice: item.quantity * priceMap.get(item.name)!,
+        totalPrice: Math.round(item.quantity * priceMap.get(item.name)! * 100) / 100
       }));
       console.log(shipmentItemsDetails);
   
-      const shipmentGrandTotal = shipmentItemsDetails.reduce(
-        (sum: any, item: any) => sum + item.totalPrice,
-        0
-      );
+      const shipmentGrandTotal = Math.round(
+        shipmentItemsDetails.reduce((sum: any, item: any) => sum + item.totalPrice, 0) * 100
+      ) / 100;
+      
       const shipmentDetails = { shipmentItemsDetails, DispatchedDate, shipmentGrandTotal, shipmentFrom, shipmentTo };
       console.log(shipmentDetails);
 

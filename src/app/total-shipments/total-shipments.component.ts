@@ -11,11 +11,12 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Router } from '@angular/router';
+import { NavBarComponent } from '../nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-total-shipments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule ],
+  imports: [CommonModule, ReactiveFormsModule, DragDropModule, NavBarComponent ],
   templateUrl: './total-shipments.component.html',
   styleUrl: './total-shipments.component.css',
 })
@@ -137,20 +138,25 @@ export class TotalShipmentsComponent implements OnInit {
 
   }
 
-  onStoreChange = (event: Event) => {
+  onStoreChange = (name: string) => {
     this.storeChange = true;
-    const storeName = event.target as HTMLSelectElement;
 
-    if (storeName.value === 'Madurai Pandiyas') {
+    if (name === 'Madurai Pandiyas') {
       this.shipmentFrom = 'Madurai Pandiyas'
       this.shipmentTo = 'Madurai Pandiyas Elite'
       this.getShipmentDetails('Madurai Pandiyas');
-    } else if (storeName.value === 'Madurai Pandiyas Elite') {
+    } else if (name === 'Madurai Pandiyas Elite') {
       this.shipmentFrom = 'Madurai Pandiyas Elite'
       this.shipmentTo = 'Madurai Pandiyas'
       this.getShipmentDetails('Madurai Pandiyas Elite');
     }
   }
+
+  selectLocation(loc: string) {
+    this.fromStoreControl.setValue(loc);
+    this.onStoreChange(loc); 
+  }
+  
 
   getTotalDispatchedItems = () => {
     this.totalDispatchedItems = [
@@ -158,6 +164,7 @@ export class TotalShipmentsComponent implements OnInit {
       ...(this.dispatchedFromMaduraiPandiyasElite ?? []),
     ];
   }
+
 
   applyFilters = () => {
 
