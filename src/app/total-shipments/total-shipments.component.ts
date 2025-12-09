@@ -80,8 +80,8 @@ export class TotalShipmentsComponent implements OnInit {
   getShipmentDetails = (shipmentFrom: string) => {
     const { monday, sunday } = this.getCurrentWeekRange();
   
-    const mondayStr = monday.toISOString().split('T')[0];
-    const sundayStr = sunday.toISOString().split('T')[0];
+    const mondayStr = monday.toLocaleDateString('en-CA').split('T')[0];
+    const sundayStr = sunday.toLocaleDateString('en-CA').split('T')[0];
   
     this.shipmentService.getAllShipmentDetails(shipmentFrom).subscribe(
       (resMadurai) => {
