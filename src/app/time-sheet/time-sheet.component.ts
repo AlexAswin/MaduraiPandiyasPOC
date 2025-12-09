@@ -144,8 +144,8 @@ export class TimeSheetComponent implements OnInit{
     end.setDate(start.getDate() + 6);
     end.setHours(23,59,59,999);
 
-    this.dateFrom = start.toISOString().slice(0,10);
-    this.dateTo = end.toISOString().slice(0,10);
+    this.dateFrom = start.toLocaleDateString('en-CA').slice(0,10);
+    this.dateTo = end.toLocaleDateString('en-CA').slice(0,10);
   }
 
   selectEmployee(emp: any) {

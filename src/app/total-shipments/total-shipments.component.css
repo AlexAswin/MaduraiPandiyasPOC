@@ -45,7 +45,7 @@
 
 
   .form-group {
-    min-width: 35%;
+    min-width: 50%;
       .form-control {
           border-radius: 0px;
       }
@@ -59,14 +59,38 @@
     flex-wrap: wrap;
     padding: 30px 0px;
 
-    .col-md-3 {
-        display: flex;
-        justify-content: space-between;
+    .dateContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 60%;
 
-        input {
-         
-        }
+      label {
+        min-width: 35%;
+        margin-bottom: 0px;
+      }
     }
+
+    .dispatch-group {
+      min-width: 40%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+      gap: 40px;
+    
+      h4 {
+        margin-bottom: 0px;
+      }
+
+      .form-group {
+        min-width: 65%;
+          .form-control {
+              border-radius: 0px;
+          }
+      }
+    }
+
 }
 
 button {
@@ -199,7 +223,6 @@ button {
   .container {
     .header {
       display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 20px 0px;
 
@@ -212,17 +235,34 @@ button {
   }
   .date-range-container {
     gap: 30px 0px;
-    .col-md-3 {
-       width: 100%;
 
-       label {
-        width: 40%;
-       }
+    .dateContainer {
+      flex-direction: column;
+      min-width: 100%;
+      gap: 25px 0px;
+
+      .d-flex {
+        min-width: 100%;
+      }
+    }
+
+    button {
+      min-width: 100%;
+    }
+    .dispatch-group {
+      min-width: 100%;
+      .form-group {
+        min-width: 100%;
+      }
     }
 }
   .shipmentContainer { 
     .card {
       width: 100%;
+
+      .card-body {
+        padding: 10px 5px;
+      }
      }
   }
   .offcanvas {

@@ -85,50 +85,29 @@
     </div>
   </div>
 
-  <!-- <div class="dispatch-group">
-    <h4>Dispatched From</h4>
-    <div class="form-group mb-3">
 
-      <div class="dropdown w-100">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" 
-                type="button"
-                data-bs-toggle="dropdown">
-          {{ fromStoreControl.value || 'Select Location' }}
-        </button>
-    
-        <ul class="dropdown-menu w-100">
-          <li *ngFor="let loc of locations">
-            <a class="dropdown-item"
-               (click)="selectLocation(loc)">
-              {{ loc }}
-            </a>
-          </li>
-        </ul>
-    
-      </div>
-    
-    </div>
-    
-  </div>  -->
 
   <div class="date-range-container">
-    <div class="col-md-3">
-      <label for="startDate" class="form-label fw-semibold">Start Date</label>
-      <input type="date" id="startDate" class="form-control" [formControl]="startDateControl">
+    <div class="dateContainer">
+      <div class="d-flex align-items-center">
+        <label for="startDate" class="form-label fw-semibold">Start Date</label>
+        <input type="date" id="startDate" class="form-control" [formControl]="startDateControl">
+      </div>
+  
+      <div class="d-flex align-items-center">
+        <label for="endDate" class="form-label fw-semibold">End Date</label>
+        <input type="date" id="endDate" class="form-control" [formControl]="endDateControl">
+      </div>
+  
+      <button btn btn-primary (click)="applyFilters()">Apply Filter</button>
     </div>
 
-    <div class="col-md-3">
-      <label for="endDate" class="form-label fw-semibold">End Date</label>
-      <input type="date" id="endDate" class="form-control" [formControl]="endDateControl">
-    </div>
-
-    <button btn btn-primary (click)="applyFilters()">Apply Filter</button>
 
     <div class="dispatch-group">
       <!-- <h4>Dispatched From</h4> -->
       <div class="form-group">
   
-        <div class="dropdown w-100">
+        <div class="dropdown">
       
           <!-- Dropdown Button -->
           <button class="btn btn-outline-secondary dropdown-toggle w-100" 
