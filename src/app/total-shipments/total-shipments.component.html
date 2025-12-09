@@ -1,32 +1,9 @@
+<app-nav-bar></app-nav-bar>
+
 <div class="container mt-3">
   <div class="header">
     <div><button class="logOutBtn" (click)="logout()" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Log Out"><i class="bi bi-arrow-left-circle"></i></button></div>
     <h3>Shipment Details</h3>
-    <div class="dispatch-group">
-      <h3>Dispatched From</h3>
-      <div class="form-group mb-3">
-        <select id="from" class="form-control" formControlName="from" [formControl]="fromStoreControl"
-          (change)="onStoreChange($event)">
-          <option *ngFor="let loc of locations" [value]="loc">
-            {{ loc }}
-          </option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <div class="date-range-container">
-    <div class="col-md-3">
-      <label for="startDate" class="form-label fw-semibold">Start Date</label>
-      <input type="date" id="startDate" class="form-control" [formControl]="startDateControl">
-    </div>
-
-    <div class="col-md-3">
-      <label for="endDate" class="form-label fw-semibold">End Date</label>
-      <input type="date" id="endDate" class="form-control" [formControl]="endDateControl">
-    </div>
-
-    <button btn btn-primary (click)="applyFilters()">Apply Filter</button>
 
     <div [formGroup]="addItemsForm">
       <button btn btn-primary type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop"><i class="bi bi-text-indent-left"></i></button>
@@ -106,6 +83,78 @@
         
       </div>
     </div>
+  </div>
+
+  <!-- <div class="dispatch-group">
+    <h4>Dispatched From</h4>
+    <div class="form-group mb-3">
+
+      <div class="dropdown w-100">
+        <button class="btn btn-outline-secondary dropdown-toggle w-100" 
+                type="button"
+                data-bs-toggle="dropdown">
+          {{ fromStoreControl.value || 'Select Location' }}
+        </button>
+    
+        <ul class="dropdown-menu w-100">
+          <li *ngFor="let loc of locations">
+            <a class="dropdown-item"
+               (click)="selectLocation(loc)">
+              {{ loc }}
+            </a>
+          </li>
+        </ul>
+    
+      </div>
+    
+    </div>
+    
+  </div>  -->
+
+  <div class="date-range-container">
+    <div class="col-md-3">
+      <label for="startDate" class="form-label fw-semibold">Start Date</label>
+      <input type="date" id="startDate" class="form-control" [formControl]="startDateControl">
+    </div>
+
+    <div class="col-md-3">
+      <label for="endDate" class="form-label fw-semibold">End Date</label>
+      <input type="date" id="endDate" class="form-control" [formControl]="endDateControl">
+    </div>
+
+    <button btn btn-primary (click)="applyFilters()">Apply Filter</button>
+
+    <div class="dispatch-group">
+      <!-- <h4>Dispatched From</h4> -->
+      <div class="form-group">
+  
+        <div class="dropdown w-100">
+      
+          <!-- Dropdown Button -->
+          <button class="btn btn-outline-secondary dropdown-toggle w-100" 
+                  type="button"
+                  data-bs-toggle="dropdown">
+            {{ fromStoreControl.value || 'Select Location' }}
+          </button>
+      
+          <!-- Dropdown Menu -->
+          <ul class="dropdown-menu w-100">
+            <li *ngFor="let loc of locations">
+              <a class="dropdown-item"
+                 (click)="selectLocation(loc)">
+                {{ loc }}
+              </a>
+            </li>
+          </ul>
+      
+        </div>
+      
+      </div>
+      
+    </div> 
+
+    
+   
   </div>
 
   <ng-template #noData>

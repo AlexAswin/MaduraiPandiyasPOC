@@ -8,21 +8,16 @@ export class ScheduleService {
 
   constructor(private firestore: Firestore) {}
 
-  saveWeeklySchedule(storeId: string, weekId: string, payload: any) {
-    const ref = doc(this.firestore, `stores/${storeId}/weeklySchedules/${weekId}`);
+  saveWeeklySchedule(storeId: string, payload: any) {
+    const ref = doc(this.firestore, `stores/${storeId}/weeklySchedules/schedule`);
     return setDoc(ref, payload, { merge: true });
   }
 
-  async getWeeklySchedule(storeId: string, weekId: string) {
-    const ref = doc(this.firestore, `stores/${storeId}/weeklySchedules/${weekId}`);
+  async getWeeklySchedule(storeId: string) {
+    const ref = doc(this.firestore, `stores/${storeId}/weeklySchedules/schedule`);
     const snap = await getDoc(ref);
-
-    if (snap.exists()) {
-      return snap.data();
-    } else {
-      return null;
-    }
-  }
+  
+    return snap.exists() ? snap.data() : null;  }
 
 
   saveTimeSheet(storeId: string, weekId: string, employees: any[], hourlyRate: number, dateFrom: string, dateTo: string) {
