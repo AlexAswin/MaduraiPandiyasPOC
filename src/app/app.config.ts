@@ -16,6 +16,13 @@ export const appConfig: ApplicationConfig = {
         messagingSenderId: '134451260435',
         appId: '1:134451260435:web:1ef72d0b9c4983fb4c23e6',
         measurementId: 'G-YJ66XK83P8',
+        // apiKey: 'AIzaSyCpoWIn3AM8p8-eSJSIWRcdUNLlvmSirDM',
+        // authDomain: 'madurai-pandiyas.firebaseapp.com',
+        // projectId: 'madurai-pandiyas',
+        // storageBucket: 'madurai-pandiyas.firebasestorage.app',
+        // messagingSenderId: '913572215946',
+        // appId: '1:913572215946:web:7d5c07294cc2ba30344173',
+        // measurementId: 'G-JV8EMP9JKR',
       })
     ),
     provideFirestore(() => getFirestore()),

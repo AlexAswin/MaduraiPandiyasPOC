@@ -40,7 +40,7 @@ export class LogInComponent implements OnInit {
     } else if (formattedUserId === 'Madurai Pandiyas Elite' && password === '123456') {
       localStorage.setItem('UserId', formattedUserId);
       this.router.navigate(['/shipment']);
-    } else if (formattedUserId === 'Ram Madurai Pandiyas' && password === '123456') {
+    } else if (formattedUserId === 'Ram Madurai Pandiyas' && password === '654123') {
       localStorage.setItem('UserId', formattedUserId);
       this.router.navigate(['/total-shipments']);
     } else {
