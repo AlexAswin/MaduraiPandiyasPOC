@@ -43,6 +43,8 @@ export class ShipmentsComponent {
   showSnackbar = false;
   ShowMessage = '';
 
+  selectedItem: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private shipmentService: ShipmentService,
@@ -94,9 +96,9 @@ export class ShipmentsComponent {
     this.shipmentService.getAllItemsDetails('Items').subscribe(res => {
       this.ItemsInformation = res.map(item => ({
         itemName: item.itemName,
-        unitPrice: Number(item.unitPrice) // convert from string to number
+        unitPrice: Number(item.unitPrice)
       }));
-      this.Items = res.map(item => item.itemName);
+      this.Items = res.map(item => item.itemName).sort((a, b) => a.localeCompare(b));
     });
   }
 
@@ -130,6 +132,11 @@ export class ShipmentsComponent {
   getSavedItems() {
     const storedItem = localStorage.getItem("Saved Items");
     this.reqItems = storedItem ? JSON.parse(storedItem) : [];
+  }
+
+  onSelectItem(item: string) {
+    this.selectedItem = item;
+    this.shipmentDetails.get('message')?.setValue(item);
   }
   
   triggerSnackbar(message: any) {
